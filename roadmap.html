@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roadmap - Carbyne.exe</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { min-height: 100vh; background: #000; color: #ccc; font-family: 'Share Tech Mono', monospace; line-height: 1.8; padding: 40px; max-width: 900px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 60px; padding-bottom: 30px; border-bottom: 1px solid #1a3a1a; }
+        .header h1 { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; color: #00ff00; text-shadow: 0 0 30px rgba(0, 255, 0, 0.5); margin-bottom: 15px; }
+        .header .meta { color: #3B444B; font-size: 0.85rem; letter-spacing: 2px; }
+        .section { margin-bottom: 50px; }
+        h2 { font-family: 'Orbitron', sans-serif; font-size: 1.3rem; color: #00ff00; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #1a3a1a; }
+        h3 { color: #00aa00; font-size: 1rem; margin: 25px 0 15px; }
+        p { margin-bottom: 15px; color: #aaa; }
+        .highlight { color: #00ff00; }
+        code { background: rgba(0, 255, 0, 0.1); padding: 2px 8px; color: #00ff00; }
+        pre { background: rgba(0, 0, 0, 0.5); border: 1px solid #1a3a1a; padding: 20px; margin: 20px 0; overflow-x: auto; font-size: 0.85rem; color: #00ff00; }
+        ul { color: #888; margin-left: 25px; margin-bottom: 20px; }
+        li { margin-bottom: 10px; }
+        .tag { display: inline-block; background: rgba(59, 68, 75, 0.5); color: #00ff00; padding: 3px 10px; font-size: 0.7rem; margin-right: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        .footer { text-align: center; padding-top: 40px; border-top: 1px solid #1a3a1a; margin-top: 60px; }
+        .footer p { color: #3B444B; font-size: 0.8rem; }
+        .back-link { display: inline-block; color: #00ff00; text-decoration: none; margin-bottom: 30px; padding: 8px 15px; border: 1px solid #1a3a1a; }
+        .back-link:hover { background: rgba(0, 255, 0, 0.1); }
+        .roadmap-item { background: rgba(0, 0, 0, 0.5); border: 1px solid #1a3a1a; padding: 25px; margin: 20px 0; position: relative; }
+        .roadmap-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; }
+        .roadmap-item.active::before { background: #00ff00; }
+        .roadmap-item.planned::before { background: #3B444B; }
+        .roadmap-item.future::before { background: #1a1a1a; }
+        .roadmap-status { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
+        .roadmap-status.active { color: #00ff00; }
+        .roadmap-status.planned { color: #3B444B; }
+        .roadmap-status.future { color: #666; }
+        .roadmap-item h3 { margin-top: 0; }
+        .progress-bar { background: #1a1a1a; height: 8px; margin: 15px 0; border-radius: 4px; overflow: hidden; }
+        .progress-fill { background: #00ff00; height: 100%; transition: width 0.3s; }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">← Back to Chronicle</a>
+    
+    <header class="header">
+        <h1>Roadmap</h1>
+        <p class="meta">WHAT'S COMING // CARBYNE.EXE</p>
+    </header>
+    
+    <section class="section">
+        <h2>Active Development</h2>
+        
+        <div class="roadmap-item active">
+            <div class="roadmap-status active">● In Progress</div>
+            <h3>Carbyne Browser</h3>
+            <p>Custom Tauri-based Claude client to replace Electron-heavy Claude Desktop.</p>
+            <ul>
+                <li>Target: 50MB RAM vs current 1GB</li>
+                <li>Target: 10MB binary vs 300MB download</li>
+                <li>Native Windows integration</li>
+                <li>Custom MCP server management UI</li>
+            </ul>
+            <div class="progress-bar"><div class="progress-fill" style="width: 40%;"></div></div>
+            <span class="tag">Tauri</span>
+            <span class="tag">Rust</span>
+            <span class="tag">WebView</span>
+        </div>
+        
+        <div class="roadmap-item active">
+            <div class="roadmap-status active">● In Progress</div>
+            <h3>SWE-Bench Integration</h3>
+            <p>Software engineering benchmark for validating agent capabilities.</p>
+            <ul>
+                <li>300 instances queued for testing</li>
+                <li>swe-rex 1.4.0 sandboxed execution</li>
+                <li>First success: django__django-11099 (exact gold patch match)</li>
+            </ul>
+            <div class="progress-bar"><div class="progress-fill" style="width: 25%;"></div></div>
+            <span class="tag">Benchmarking</span>
+            <span class="tag">Validation</span>
+        </div>
+        
+        <div class="roadmap-item active">
+            <div class="roadmap-status active">● In Progress</div>
+            <h3>carbyne-tui</h3>
+            <p>Terminal user interface for agent monitoring and task management.</p>
+            <ul>
+                <li>3-panel WoW-style keybind layout</li>
+                <li>Real-time agent status display</li>
+                <li>Message queue visualization</li>
+                <li>Task dispatch controls</li>
+            </ul>
+            <div class="progress-bar"><div class="progress-fill" style="width: 15%;"></div></div>
+            <span class="tag">TUI</span>
+            <span class="tag">Monitoring</span>
+        </div>
+    </section>
+    
+    <section class="section">
+        <h2>Planned</h2>
+        
+        <div class="roadmap-item planned">
+            <div class="roadmap-status planned">○ Planned</div>
+            <h3>Power Automate Desktop Integration</h3>
+            <p>"Hands" for GUI automation where APIs don't exist.</p>
+            <ul>
+                <li>Robin scripting language integration</li>
+                <li>Legacy application control</li>
+                <li>Visual workflow orchestration</li>
+                <li>Agent-triggered automation flows</li>
+            </ul>
+            <span class="tag">GUI Automation</span>
+            <span class="tag">PAD</span>
+        </div>
+        
+        <div class="roadmap-item planned">
+            <div class="roadmap-status planned">○ Planned</div>
+            <h3>Linux Dual-Boot Environment</h3>
+            <p>Native Linux capability alongside Windows.</p>
+            <ul>
+                <li>Ubuntu 24 or Kali Linux</li>
+                <li>RTX 5070 Ti GPU passthrough investigation</li>
+                <li>Shared storage access</li>
+                <li>Tool parity across both OSes</li>
+            </ul>
+            <span class="tag">Linux</span>
+            <span class="tag">Dual-Boot</span>
+        </div>
+        
+        <div class="roadmap-item planned">
+            <div class="roadmap-status planned">○ Planned</div>
+            <h3>NetHunter Mobile Deployment</h3>
+            <p>KALIC capabilities on mobile hardware.</p>
+            <ul>
+                <li>Samsung S10 5G root + NetHunter</li>
+                <li>PhiSHRI knowledge base deployment</li>
+                <li>MCP server source code on device</li>
+                <li>Portable security toolkit</li>
+            </ul>
+            <span class="tag">Mobile</span>
+            <span class="tag">NetHunter</span>
+            <span class="tag">Kali</span>
+        </div>
+        
+        <div class="roadmap-item planned">
+            <div class="roadmap-status planned">○ Planned</div>
+            <h3>Additional Agent Deployment</h3>
+            <p>Expand the agent network beyond DC and KALIC.</p>
+            <ul>
+                <li>Specialized agents for specific domains</li>
+                <li>Improved inter-agent coordination</li>
+                <li>Shared context protocols</li>
+                <li>Task delegation framework</li>
+            </ul>
+            <span class="tag">Multi-Agent</span>
+            <span class="tag">Coordination</span>
+        </div>
+    </section>
+    
+    <section class="section">
+        <h2>Future Exploration</h2>
+        
+        <div class="roadmap-item future">
+            <div class="roadmap-status future">◌ Future</div>
+            <h3>Hardware Upgrade</h3>
+            <p>Next-gen GPU for local model inference exploration.</p>
+            <ul>
+                <li>RTX 5070 Ti 16GB VRAM</li>
+                <li>Local LLM inference capability</li>
+                <li>Reduced cloud dependency</li>
+            </ul>
+            <span class="tag">Hardware</span>
+            <span class="tag">Local Inference</span>
+        </div>
+        
+        <div class="roadmap-item future">
+            <div class="roadmap-status future">◌ Future</div>
+            <h3>Vintage Hardware Revival</h3>
+            <p>Breathing life into old machines.</p>
+            <ul>
+                <li>2004 Dell Inspiron 8600 project</li>
+                <li>BookwormPup32 compatibility</li>
+                <li>Minimal resource footprint tools</li>
+            </ul>
+            <span class="tag">Retro</span>
+            <span class="tag">Lightweight</span>
+        </div>
+        
+        <div class="roadmap-item future">
+            <div class="roadmap-status future">◌ Future</div>
+            <h3>PhiSHRI v2</h3>
+            <p>Enhanced knowledge management.</p>
+            <ul>
+                <li>Vector embeddings for semantic search</li>
+                <li>Automatic door generation from conversations</li>
+                <li>Cross-reference graph visualization</li>
+                <li>Version control for knowledge evolution</li>
+            </ul>
+            <span class="tag">Knowledge</span>
+            <span class="tag">Embeddings</span>
+        </div>
+    </section>
+    
+    <section class="section">
+        <h2>The Vision</h2>
+        <p>Every item on this roadmap serves the same goal: <span class="highlight">complete operational capability, anywhere, anytime.</span></p>
+        
+        <p>Carbyne Browser removes Electron bloat. SWE-Bench validates capability. The TUI provides visibility. PAD gives hands. Linux expands reach. NetHunter makes it mobile.</p>
+        
+        <p>Each piece compounds. Each tool makes the others more useful. The system grows more capable without growing more complex.</p>
+        
+        <pre>
+End State:
+┌─────────────────────────────────────────┐
+│  1TB VHDX = Complete AI Runtime         │
+│  ├── Windows tools                      │
+│  ├── Linux tools                        │
+│  ├── Mobile deployment ready            │
+│  ├── Local inference capable            │
+│  └── Zero external dependencies         │
+└─────────────────────────────────────────┘
+        </pre>
+        
+        <p>That's the destination. Everything on this roadmap is a step toward it.</p>
+    </section>
+    
+    <footer class="footer">
+        <p>CARBYNE.EXE // PHIVECTOR PROJECT</p>
+        <p style="margin-top: 10px;">Building the future, one tool at a time.</p>
+    </footer>
+</body>
+</html>

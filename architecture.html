@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Architecture Overview - Carbyne.exe</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { min-height: 100vh; background: #000; color: #ccc; font-family: 'Share Tech Mono', monospace; line-height: 1.8; padding: 40px; max-width: 900px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 60px; padding-bottom: 30px; border-bottom: 1px solid #1a3a1a; }
+        .header h1 { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; color: #00ff00; text-shadow: 0 0 30px rgba(0, 255, 0, 0.5); margin-bottom: 15px; }
+        .header .meta { color: #3B444B; font-size: 0.85rem; letter-spacing: 2px; }
+        .section { margin-bottom: 50px; }
+        h2 { font-family: 'Orbitron', sans-serif; font-size: 1.3rem; color: #00ff00; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #1a3a1a; }
+        h3 { color: #00aa00; font-size: 1rem; margin: 25px 0 15px; }
+        p { margin-bottom: 15px; color: #aaa; }
+        .highlight { color: #00ff00; }
+        code { background: rgba(0, 255, 0, 0.1); padding: 2px 8px; color: #00ff00; }
+        pre { background: rgba(0, 0, 0, 0.5); border: 1px solid #1a3a1a; padding: 20px; margin: 20px 0; overflow-x: auto; font-size: 0.8rem; color: #00ff00; line-height: 1.4; }
+        .diagram { background: rgba(0, 0, 0, 0.8); border: 1px solid #3B444B; padding: 25px; margin: 25px 0; font-size: 0.85rem; overflow-x: auto; }
+        .diagram-title { color: #3B444B; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #1a3a1a; padding: 12px; text-align: left; }
+        th { background: rgba(0, 255, 0, 0.1); color: #00ff00; font-weight: normal; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
+        td { color: #888; }
+        ul { color: #888; margin-left: 25px; margin-bottom: 20px; }
+        li { margin-bottom: 10px; }
+        .tag { display: inline-block; background: rgba(59, 68, 75, 0.5); color: #00ff00; padding: 3px 10px; font-size: 0.7rem; margin-right: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        .footer { text-align: center; padding-top: 40px; border-top: 1px solid #1a3a1a; margin-top: 60px; }
+        .footer p { color: #3B444B; font-size: 0.8rem; }
+        .back-link { display: inline-block; color: #00ff00; text-decoration: none; margin-bottom: 30px; padding: 8px 15px; border: 1px solid #1a3a1a; }
+        .back-link:hover { background: rgba(0, 255, 0, 0.1); }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 25px 0; }
+        .stat-box { background: rgba(0, 0, 0, 0.5); border: 1px solid #1a3a1a; padding: 15px; text-align: center; }
+        .stat-value { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; color: #00ff00; }
+        .stat-label { color: #666; font-size: 0.75rem; margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">← Back to Chronicle</a>
+    
+    <header class="header">
+        <h1>Architecture Overview</h1>
+        <p class="meta">HOW IT ALL CONNECTS // CARBYNE.EXE</p>
+    </header>
+    
+    <section class="section">
+        <h2>System Topology</h2>
+        
+        <div class="diagram">
+            <div class="diagram-title">PhiVector High-Level Architecture</div>
+<pre style="background: transparent; border: none; padding: 0; margin: 0; color: #00ff00;">
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              HUMAN LAYER                                    │
+│                                                                             │
+│                              ┌─────────┐                                    │
+│                              │  STRYK  │                                    │
+│                              └────┬────┘                                    │
+│                                   │                                         │
+└───────────────────────────────────┼─────────────────────────────────────────┘
+                                    │
+┌───────────────────────────────────┼─────────────────────────────────────────┐
+│                              AGENT LAYER                                    │
+│                                   │                                         │
+│         ┌─────────────────────────┼─────────────────────────┐               │
+│         │                         │                         │               │
+│         ▼                         ▼                         ▼               │
+│   ┌───────────┐           ┌───────────────┐           ┌───────────┐         │
+│   │    DC     │◄─────────►│   P15 BRIDGE  │◄─────────►│   KALIC   │         │
+│   │ (Desktop) │ WM_COPYDATA│  Agent Bridge │WM_COPYDATA│  (WSL2)   │         │
+│   └─────┬─────┘           └───────────────┘           └─────┬─────┘         │
+│         │                                                   │               │
+└─────────┼───────────────────────────────────────────────────┼───────────────┘
+          │                                                   │
+┌─────────┼───────────────────────────────────────────────────┼───────────────┐
+│         │              KNOWLEDGE LAYER                      │               │
+│         ▼                                                   ▼               │
+│   ┌───────────┐                                       ┌───────────┐         │
+│   │  PhiSHRI  │                                       │kalic_brain│         │
+│   │ 600+ doors│                                       │ 5 regions │         │
+│   └─────┬─────┘                                       └─────┬─────┘         │
+│         │                                                   │               │
+│         │  ┌──────────┐  ┌──────────┐  ┌──────────┐        │               │
+│         ├─►│ SECURITY │  │  TOOLS   │  │ WORKFLOWS│        │               │
+│         │  │  55 doors│  │ 115 doors│  │ 205 doors│        │               │
+│         │  └──────────┘  └──────────┘  └──────────┘        │               │
+│         │                                                   │               │
+│         │  ┌──────────┐  ┌──────────┐  ┌──────────┐        │               │
+│         └─►│   ARCH   │  │  ERRORS  │  │ PROJECTS │        │               │
+│            │  50 doors│  │  various │  │  various │        │               │
+│            └──────────┘  └──────────┘  └──────────┘        │               │
+│                                                             │               │
+│                                      ┌──────────────────────┘               │
+│                                      │                                      │
+│            ┌──────────┐  ┌──────────┼┐  ┌──────────┐  ┌──────────┐         │
+│            │ FRONTAL  │  │ TEMPORAL ││  │ PARIETAL │  │CEREBELLUM│         │
+│            │ decisions│  │ learnings││  │navigation│  │ commands │         │
+│            └──────────┘  └──────────┼┘  └──────────┘  └──────────┘         │
+│                                      │                                      │
+│                              ┌───────┴──┐                                   │
+│                              │BRAINSTEM │                                   │
+│                              │ DO NOTs  │                                   │
+│                              └──────────┘                                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              TOOL LAYER                                     │
+│                                                                             │
+│  ┌─────────────────────────────────────────────────────────────────────┐    │
+│  │                     MCP TOOLKIT (119 tools)                         │    │
+│  ├───────────┬───────────┬───────────┬───────────┬───────────┬─────────┤    │
+│  │ Everything│    Git    │  Windows  │  SigCon6  │Multiplexor│ Screen  │    │
+│  │  34 tools │  20 tools │  18 tools │  26 tools │  10 tools │ 7 tools │    │
+│  ├───────────┼───────────┼───────────┼───────────┼───────────┼─────────┤    │
+│  │file search│  version  │ PowerShell│  network  │ persistent│  window │    │
+│  │  <100ms   │  control  │  process  │diagnostics│  terminal │ capture │    │
+│  └───────────┴───────────┴───────────┴───────────┴───────────┴─────────┘    │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                            STORAGE LAYER                                    │
+│                                                                             │
+│  ┌─────────────────────────────────────────────────────────────────────┐    │
+│  │                      1TB VHDX PORTABLE DRIVE                        │    │
+│  ├─────────────┬─────────────┬─────────────┬─────────────┬─────────────┤    │
+│  │   C:\Tools  │  C:\PhiDEX  │  C:\Dev     │  Configs    │  Runtimes   │    │
+│  │   binaries  │   projects  │   source    │   MCP JSON  │   (if any)  │    │
+│  └─────────────┴─────────────┴─────────────┴─────────────┴─────────────┘    │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+</pre>
+        </div>
+    </section>
+    
+    <section class="section">
+        <h2>Component Details</h2>
+        
+        <h3>Agent Layer</h3>
+        <table>
+            <tr>
+                <th>Component</th>
+                <th>Location</th>
+                <th>Role</th>
+            </tr>
+            <tr>
+                <td><span class="highlight">DC</span></td>
+                <td>Claude Desktop (Windows)</td>
+                <td>Orchestrator, memory management, user interface</td>
+            </tr>
+            <tr>
+                <td><span class="highlight">KALIC</span></td>
+                <td>Claude Code (WSL2/Kali)</td>
+                <td>Terminal agent, security operations, CLI tasks</td>
+            </tr>
+            <tr>
+                <td><span class="highlight">P15 Bridge</span></td>
+                <td>AutoHotkey + WM_COPYDATA</td>
+                <td>Inter-agent messaging, synchronous communication</td>
+            </tr>
+        </table>
+        
+        <h3>Knowledge Layer</h3>
+        <table>
+            <tr>
+                <th>System</th>
+                <th>Size</th>
+                <th>Purpose</th>
+            </tr>
+            <tr>
+                <td><span class="highlight">PhiSHRI</span></td>
+                <td>600+ doors</td>
+                <td>Long-term knowledge storage, semantic search, indexed solutions</td>
+            </tr>
+            <tr>
+                <td><span class="highlight">kalic_brain</span></td>
+                <td>5 regions</td>
+                <td>Working memory, decision gates, learnings, navigation</td>
+            </tr>
+            <tr>
+                <td><span class="highlight">semantic_links.json</span></td>
+                <td>~185 tokens</td>
+                <td>Keyword router, surgical reads, enforcement triggers</td>
+            </tr>
+        </table>
+        
+        <h3>Tool Layer</h3>
+        
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-value">119</div>
+                <div class="stat-label">Total Tools</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">6</div>
+                <div class="stat-label">MCP Servers</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">0</div>
+                <div class="stat-label">External Dependencies</div>
+            </div>
+        </div>
+        
+        <table>
+            <tr>
+                <th>Server</th>
+                <th>Tools</th>
+                <th>Function</th>
+            </tr>
+            <tr>
+                <td>Everything</td>
+                <td>34</td>
+                <td>File search, content search, duplicate detection</td>
+            </tr>
+            <tr>
+                <td>Git</td>
+                <td>20</td>
+                <td>Version control, diff, branch, commit, stash</td>
+            </tr>
+            <tr>
+                <td>Windows</td>
+                <td>18</td>
+                <td>PowerShell, process management, services, clipboard</td>
+            </tr>
+            <tr>
+                <td>SigCon6</td>
+                <td>26</td>
+                <td>Network diagnostics, adapters, TCP, firewall, SMB</td>
+            </tr>
+            <tr>
+                <td>Multiplexor</td>
+                <td>10</td>
+                <td>Persistent terminals, async commands, sessions</td>
+            </tr>
+            <tr>
+                <td>Screen</td>
+                <td>7</td>
+                <td>Window capture, pixel detection, screenshots</td>
+            </tr>
+        </table>
+    </section>
+    
+    <section class="section">
+        <h2>Data Flow</h2>
+        
+        <div class="diagram">
+            <div class="diagram-title">Request Processing Flow</div>
+<pre style="background: transparent; border: none; padding: 0; margin: 0; color: #00ff00;">
+User Request
+     │
+     ▼
+┌─────────────┐
+│ DC receives │
+└──────┬──────┘
+       │
+       ▼
+┌─────────────────────┐
+│ Check semantic_links│──── BLOCK match? ────► REFUSE
+└──────────┬──────────┘
+           │
+           │ GATE match?
+           ▼
+┌─────────────────────┐
+│ Load specific anchor│
+│ (e.g., frontal#build)
+└──────────┬──────────┘
+           │
+           │ Conditions met?
+           ▼
+┌─────────────────────┐
+│   Query PhiSHRI     │
+│   for relevant doors│
+└──────────┬──────────┘
+           │
+           │ Need KALIC?
+           ▼
+┌─────────────────────┐      ┌─────────────────┐
+│  Send via P15 Bridge│─────►│  KALIC executes │
+└──────────┬──────────┘      └────────┬────────┘
+           │                          │
+           │◄─────────────────────────┘
+           │         Response
+           ▼
+┌─────────────────────┐
+│   Execute locally   │
+│   via MCP tools     │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│  Update temporal.md │
+│  (if learning)      │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│  Create PhiSHRI door│
+│  (if significant)   │
+└──────────┬──────────┘
+           │
+           ▼
+     Response to User
+</pre>
+        </div>
+    </section>
+    
+    <section class="section">
+        <h2>Communication Protocols</h2>
+        
+        <h3>DC ↔ KALIC (P15 Bridge)</h3>
+        <pre>
+Protocol: WM_COPYDATA via SendMessageTimeoutW
+Timeout: 1000ms with SMTO_ABORTIFHUNG
+Fallback: File-based message queue
+Format: JSON payload with action, context, callback
+
+Example:
+{
+  "action": "security_scan",
+  "target": "/var/log/auth.log",
+  "callback": "P15_RESPONSE_HWND"
+}
+        </pre>
+        
+        <h3>Agent ↔ MCP Server</h3>
+        <pre>
+Protocol: JSON-RPC over stdio
+Format: Standard MCP 1.0 specification
+Startup: Sub-second (Rust binaries)
+        </pre>
+        
+        <h3>Knowledge Access</h3>
+        <pre>
+PhiSHRI: JSON files with semantic indexing
+         HASH_TABLE.json → door code lookup
+         SEMANTIC_MAP.json → keyword search
+
+Brain Regions: Markdown with anchor sections
+              Direct file read, ~50 tokens per lookup
+        </pre>
+    </section>
+    
+    <section class="section">
+        <h2>Portability Model</h2>
+        
+        <p>The entire system is designed for portability. Mount the VHDX, run the tools. No installation, no configuration, no dependencies.</p>
+        
+        <pre>
+New Machine Setup:
+1. Mount VHDX (or copy folder structure)
+2. Run: C:\Tools\carbyne.exe --init
+3. Open Claude Desktop with existing config
+4. Full capability restored
+
+Time: < 60 seconds
+Prerequisites: None
+</pre>
+        
+        <div style="margin-top: 30px;">
+            <span class="tag">Architecture</span>
+            <span class="tag">Multi-Agent</span>
+            <span class="tag">MCP</span>
+            <span class="tag">Portable</span>
+        </div>
+    </section>
+    
+    <footer class="footer">
+        <p>CARBYNE.EXE // PHIVECTOR PROJECT</p>
+        <p style="margin-top: 10px;">Everything connects.</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Deep-Dive - Carbyne.exe</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { min-height: 100vh; background: #000; color: #ccc; font-family: 'Share Tech Mono', monospace; line-height: 1.8; padding: 40px; max-width: 900px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 60px; padding-bottom: 30px; border-bottom: 1px solid #1a3a1a; }
+        .header h1 { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; color: #00ff00; text-shadow: 0 0 30px rgba(0, 255, 0, 0.5); margin-bottom: 15px; }
+        .header .meta { color: #3B444B; font-size: 0.85rem; letter-spacing: 2px; }
+        .section { margin-bottom: 50px; }
+        h2 { font-family: 'Orbitron', sans-serif; font-size: 1.3rem; color: #00ff00; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #1a3a1a; }
+        h3 { color: #00aa00; font-size: 1rem; margin: 25px 0 15px; }
+        p { margin-bottom: 15px; color: #aaa; }
+        .highlight { color: #00ff00; }
+        .quote { background: rgba(0, 255, 0, 0.05); border-left: 3px solid #00ff00; padding: 20px; margin: 25px 0; font-style: italic; }
+        .quote .speaker { color: #3B444B; font-size: 0.8rem; margin-top: 10px; font-style: normal; }
+        code { background: rgba(0, 255, 0, 0.1); padding: 2px 8px; color: #00ff00; }
+        pre { background: rgba(0, 0, 0, 0.5); border: 1px solid #1a3a1a; padding: 20px; margin: 20px 0; overflow-x: auto; font-size: 0.85rem; color: #00ff00; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #1a3a1a; padding: 12px; text-align: left; }
+        th { background: rgba(0, 255, 0, 0.1); color: #00ff00; font-weight: normal; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
+        td { color: #888; }
+        ul { color: #888; margin-left: 25px; margin-bottom: 20px; }
+        li { margin-bottom: 10px; }
+        .tag { display: inline-block; background: rgba(59, 68, 75, 0.5); color: #00ff00; padding: 3px 10px; font-size: 0.7rem; margin-right: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        .footer { text-align: center; padding-top: 40px; border-top: 1px solid #1a3a1a; margin-top: 60px; }
+        .footer p { color: #3B444B; font-size: 0.8rem; }
+        .back-link { display: inline-block; color: #00ff00; text-decoration: none; margin-bottom: 30px; padding: 8px 15px; border: 1px solid #1a3a1a; }
+        .back-link:hover { background: rgba(0, 255, 0, 0.1); }
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin: 25px 0; }
+        .stat-box { background: rgba(0, 0, 0, 0.5); border: 1px solid #1a3a1a; padding: 20px; text-align: center; }
+        .stat-value { font-family: 'Orbitron', sans-serif; font-size: 2rem; color: #00ff00; }
+        .stat-label { color: #666; font-size: 0.8rem; margin-top: 5px; }
+        .big-number { font-family: 'Orbitron', sans-serif; font-size: 4rem; color: #00ff00; text-align: center; margin: 30px 0; text-shadow: 0 0 30px rgba(0, 255, 0, 0.5); }
+        .big-label { text-align: center; color: #3B444B; font-size: 0.9rem; letter-spacing: 2px; }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">← Back to Chronicle</a>
+    
+    <header class="header">
+        <h1>Performance Deep-Dive</h1>
+        <p class="meta">THE RUST OPTIMIZATION STORY // CARBYNE.EXE</p>
+    </header>
+    
+    <section class="section">
+        <h2>The Headline Number</h2>
+        
+        <div class="big-number">25,714x</div>
+        <div class="big-label">Carbyne Compositor: JavaScript → Rust</div>
+        
+        <p style="text-align: center; margin-top: 30px;">30 minutes became 0.07 seconds. Same output. Same quality. Different language.</p>
+    </section>
+    
+    <section class="section">
+        <h2>Why Performance Matters</h2>
+        <p>This isn't about bragging rights. Performance determines what's <em>possible</em>.</p>
+        
+        <p>A 30-minute image process means you run it once and wait. A 0.07-second process means you iterate—tweak parameters, re-run, compare, adjust. The feedback loop collapses from "go get coffee" to "instant."</p>
+        
+        <div class="quote">
+            "The difference between a slow tool and a fast tool isn't speed. It's whether you use it at all."
+            <div class="speaker">— Operational reality</div>
+        </div>
+    </section>
+    
+    <section class="section">
+        <h2>Case Study: Carbyne Compositor</h2>
+        
+        <h3>The Task</h3>
+        <p>Apply hex mesh overlay, carbyne tint, and glowing eye effect to a 1920×1080 PNG. ~2 million pixels to process.</p>
+        
+        <h3>Version 1: JavaScript (HTML5 Canvas)</h3>
+        <pre>
+// Pixel-by-pixel processing
+for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+        // Get pixel, calculate, put pixel
+        // ~4 operations per pixel
+        // 2M pixels × 4 ops = 8M operations
+        // Single-threaded
+    }
+}
+
+Result: ~30 minutes
+        </pre>
+        
+        <p>JavaScript is single-threaded. Canvas pixel access is slow. No parallelization. Each pixel waits for the previous one.</p>
+        
+        <h3>Version 2: Rust (with Rayon)</h3>
+        <pre>
+// Parallel pixel processing
+pixels.par_iter()
+    .map(|(x, y, pixel)| {
+        // Same calculation
+        // But across all CPU cores simultaneously
+    })
+    .collect();
+
+Result: 0.07 seconds
+        </pre>
+        
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-value">8</div>
+                <div class="stat-label">CPU Cores Used</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">~300</div>
+                <div class="stat-label">Lines of Rust</div>
+            </div>
+        </div>
+        
+        <h3>What Made the Difference</h3>
+        <ul>
+            <li><strong>Rayon parallelization</strong> - <code>.par_iter()</code> distributes work across all CPU cores automatically</li>
+            <li><strong>Native memory access</strong> - Direct pixel manipulation without JS-to-native bridges</li>
+            <li><strong>Zero-copy operations</strong> - No intermediate buffers, no garbage collection pauses</li>
+            <li><strong>SIMD optimization</strong> - Compiler auto-vectorizes tight loops</li>
+        </ul>
+    </section>
+    
+    <section class="section">
+        <h2>Case Study: Everything MCP</h2>
+        
+        <h3>The Problem</h3>
+        <p>File search on Windows. Explorer search takes 30-60 seconds to scan directories. Unacceptable for iterative workflows.</p>
+        
+        <h3>.NET Version</h3>
+        <table>
+            <tr>
+                <th>Metric</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>Binary Size</td>
+                <td>100MB+ (with runtime)</td>
+            </tr>
+            <tr>
+                <td>Cold Startup</td>
+                <td>2-3 seconds (JIT compilation)</td>
+            </tr>
+            <tr>
+                <td>Memory Baseline</td>
+                <td>~80MB</td>
+            </tr>
+            <tr>
+                <td>Search Time</td>
+                <td>~100ms (Everything SDK does the work)</td>
+            </tr>
+        </table>
+        
+        <h3>Rust Version</h3>
+        <table>
+            <tr>
+                <th>Metric</th>
+                <th>Value</th>
+                <th>Improvement</th>
+            </tr>
+            <tr>
+                <td>Binary Size</td>
+                <td>819KB</td>
+                <td><span class="highlight">99% smaller</span></td>
+            </tr>
+            <tr>
+                <td>Cold Startup</td>
+                <td>~50ms</td>
+                <td><span class="highlight">40-60x faster</span></td>
+            </tr>
+            <tr>
+                <td>Memory Baseline</td>
+                <td>~8MB</td>
+                <td><span class="highlight">10x smaller</span></td>
+            </tr>
+            <tr>
+                <td>Search Time</td>
+                <td>~80ms</td>
+                <td>Same (SDK-bound)</td>
+            </tr>
+        </table>
+        
+        <p>The actual search is the same speed—that's limited by Everything's SDK. But everything else got faster: startup, memory, deployment.</p>
+    </section>
+    
+    <section class="section">
+        <h2>Case Study: Git MCP</h2>
+        
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-value">2-3s</div>
+                <div class="stat-label">.NET Cold Start</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">641ms</div>
+                <div class="stat-label">Rust Cold Start</div>
+            </div>
+        </div>
+        
+        <p>Git operations themselves are fast—Git is already native code. The improvement comes entirely from eliminating .NET's JIT compilation overhead.</p>
+        
+        <p>20 tools, all available in under a second. Compare to waiting 2-3 seconds for the runtime to initialize, per command.</p>
+    </section>
+    
+    <section class="section">
+        <h2>The Rust Toolkit</h2>
+        
+        <h3>Parallelization: Rayon</h3>
+        <pre>
+use rayon::prelude::*;
+
+// Turn any iterator parallel with one character change
+items.iter()      // sequential
+items.par_iter()  // parallel
+
+// Rayon handles:
+// - Thread pool management
+// - Work stealing
+// - Load balancing
+// - Safe concurrency
+        </pre>
+        
+        <h3>Image Processing: image crate</h3>
+        <pre>
+use image::{GenericImageView, RgbaImage};
+
+let img = image::open("input.png")?;
+let (width, height) = img.dimensions();
+let mut rgba = img.to_rgba8();
+
+// Direct pixel access
+let pixel = rgba.get_pixel(x, y);
+rgba.put_pixel(x, y, new_pixel);
+        </pre>
+        
+        <h3>CLI: clap</h3>
+        <pre>
+use clap::Parser;
+
+#[derive(Parser)]
+struct Args {
+    #[arg(long, default_value = "30")]
+    tint_strength: u8,
+    
+    #[arg(long)]
+    eye_x: Option<u32>,
+}
+
+// Automatic argument parsing, help generation, validation
+        </pre>
+        
+        <h3>Progress: indicatif</h3>
+        <pre>
+use indicatif::{ProgressBar, ProgressStyle};
+
+let pb = ProgressBar::new(100);
+pb.set_style(ProgressStyle::default_bar()
+    .template("{bar:40} {pos}%")?);
+
+pb.set_position(50);
+pb.finish_with_message("Done!");
+        </pre>
+    </section>
+    
+    <section class="section">
+        <h2>Optimization Methodology</h2>
+        
+        <h3>1. Profile First</h3>
+        <p>Never optimize based on intuition. Measure. Find the actual bottleneck. Often it's not where you think.</p>
+        
+        <h3>2. Identify the Hot Path</h3>
+        <p>In the compositor, 99% of time was spent in the pixel loop. Optimizing anything else was wasted effort.</p>
+        
+        <h3>3. Parallelize the Hot Path</h3>
+        <p>If the hot path is embarrassingly parallel (each iteration independent), use Rayon. Free speedup proportional to core count.</p>
+        
+        <h3>4. Eliminate Allocations</h3>
+        <p>Memory allocation is slow. Reuse buffers. Avoid intermediate copies. Pre-allocate known sizes.</p>
+        
+        <h3>5. Let the Compiler Help</h3>
+        <p>Rust's optimizer is aggressive. Write clear code, use iterators, let LLVM do its job. <code>--release</code> mode is 10-100x faster than debug.</p>
+    </section>
+    
+    <section class="section">
+        <h2>The Full Portfolio</h2>
+        
+        <table>
+            <tr>
+                <th>Tool</th>
+                <th>.NET</th>
+                <th>Rust</th>
+                <th>Size Reduction</th>
+            </tr>
+            <tr>
+                <td>Everything MCP</td>
+                <td>100MB+</td>
+                <td>819KB</td>
+                <td>99.2%</td>
+            </tr>
+            <tr>
+                <td>Git MCP</td>
+                <td>~80MB</td>
+                <td>~3MB</td>
+                <td>96%</td>
+            </tr>
+            <tr>
+                <td>Multiplexor</td>
+                <td>~60MB</td>
+                <td>~2MB</td>
+                <td>97%</td>
+            </tr>
+            <tr>
+                <td>Screen MCP</td>
+                <td>~50MB</td>
+                <td>~1.5MB</td>
+                <td>97%</td>
+            </tr>
+            <tr>
+                <td>SigCon6</td>
+                <td>~70MB</td>
+                <td>~2MB</td>
+                <td>97%</td>
+            </tr>
+        </table>
+        
+        <p>Total MCP server footprint: <span class="highlight">~9.3MB</span> for 6 servers, 119 tools.</p>
+        <p>Previous .NET footprint: <span class="highlight">~460MB</span> for the same functionality.</p>
+        
+        <div class="big-number">98%</div>
+        <div class="big-label">Total Size Reduction</div>
+    </section>
+    
+    <section class="section">
+        <h2>Key Takeaways</h2>
+        
+        <ul>
+            <li><strong>Parallelization is often free</strong> - Rayon makes it trivial to use all CPU cores</li>
+            <li><strong>Language choice matters</strong> - .NET is productive; Rust is fast. Different tools for different jobs.</li>
+            <li><strong>Startup time compounds</strong> - Sub-second startup means tools feel instant</li>
+            <li><strong>Binary size affects deployment</strong> - 819KB copies faster than 100MB</li>
+            <li><strong>Profile before optimizing</strong> - Intuition lies. Measure.</li>
+        </ul>
+        
+        <div class="quote">
+            "The best optimization is the one you don't have to think about."
+            <div class="speaker">— Why Rayon is magical</div>
+        </div>
+        
+        <div style="margin-top: 30px;">
+            <span class="tag">Rust</span>
+            <span class="tag">Performance</span>
+            <span class="tag">Rayon</span>
+            <span class="tag">Optimization</span>
+        </div>
+    </section>
+    
+    <footer class="footer">
+        <p>CARBYNE.EXE // PHIVECTOR PROJECT</p>
+        <p style="margin-top: 10px;">Fast enough to iterate.</p>
+    </footer>
+</body>
+</html>

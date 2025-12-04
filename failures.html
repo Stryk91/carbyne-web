@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Failures & Dead Ends - Carbyne.exe</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { min-height: 100vh; background: #000; color: #ccc; font-family: 'Share Tech Mono', monospace; line-height: 1.8; padding: 40px; max-width: 900px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 60px; padding-bottom: 30px; border-bottom: 1px solid #1a3a1a; }
+        .header h1 { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; color: #00ff00; text-shadow: 0 0 30px rgba(0, 255, 0, 0.5); margin-bottom: 15px; }
+        .header .meta { color: #3B444B; font-size: 0.85rem; letter-spacing: 2px; }
+        .section { margin-bottom: 50px; }
+        h2 { font-family: 'Orbitron', sans-serif; font-size: 1.3rem; color: #00ff00; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #1a3a1a; }
+        h3 { color: #00aa00; font-size: 1rem; margin: 25px 0 15px; }
+        p { margin-bottom: 15px; color: #aaa; }
+        .highlight { color: #00ff00; }
+        .failure { color: #ff4444; }
+        .success { color: #00ff00; }
+        .quote { background: rgba(0, 255, 0, 0.05); border-left: 3px solid #00ff00; padding: 20px; margin: 25px 0; font-style: italic; }
+        .quote .speaker { color: #3B444B; font-size: 0.8rem; margin-top: 10px; font-style: normal; }
+        .failure-box { background: rgba(255, 0, 0, 0.05); border-left: 3px solid #ff4444; padding: 20px; margin: 25px 0; }
+        .failure-box h4 { color: #ff4444; margin-bottom: 10px; }
+        .solution-box { background: rgba(0, 255, 0, 0.05); border-left: 3px solid #00ff00; padding: 20px; margin: 25px 0; }
+        .solution-box h4 { color: #00ff00; margin-bottom: 10px; }
+        code { background: rgba(0, 255, 0, 0.1); padding: 2px 8px; color: #00ff00; }
+        pre { background: rgba(0, 0, 0, 0.5); border: 1px solid #1a3a1a; padding: 20px; margin: 20px 0; overflow-x: auto; font-size: 0.85rem; color: #00ff00; }
+        ul { color: #888; margin-left: 25px; margin-bottom: 20px; }
+        li { margin-bottom: 10px; }
+        .tag { display: inline-block; background: rgba(59, 68, 75, 0.5); color: #00ff00; padding: 3px 10px; font-size: 0.7rem; margin-right: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        .footer { text-align: center; padding-top: 40px; border-top: 1px solid #1a3a1a; margin-top: 60px; }
+        .footer p { color: #3B444B; font-size: 0.8rem; }
+        .back-link { display: inline-block; color: #00ff00; text-decoration: none; margin-bottom: 30px; padding: 8px 15px; border: 1px solid #1a3a1a; }
+        .back-link:hover { background: rgba(0, 255, 0, 0.1); }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">← Back to Chronicle</a>
+    
+    <header class="header">
+        <h1>Failures & Dead Ends</h1>
+        <p class="meta">WHAT DIDN'T WORK // CARBYNE.EXE</p>
+    </header>
+    
+    <section class="section">
+        <h2>Why Document Failures?</h2>
+        <p>Success stories are everywhere. Failure post-mortems are rare. But failures teach more than victories—they show the edges of what's possible and the assumptions that break under pressure.</p>
+        
+        <p>This is a candid account of approaches that didn't work, debugging rabbit holes, and hard lessons learned the expensive way.</p>
+    </section>
+    
+    <section class="section">
+        <h2>The File-Watching Vaporware</h2>
+        
+        <div class="failure-box">
+            <h4>The Idea</h4>
+            <p>Inter-agent communication via file watchers. DC writes to a file, KALIC's watcher triggers, reads the message, responds. Simple pub/sub pattern.</p>
+        </div>
+        
+        <h3>What Went Wrong</h3>
+        <ul>
+            <li>FileSystemWatcher is unreliable on Windows—events missed under load</li>
+            <li>Polling introduces latency and CPU waste</li>
+            <li>Race conditions when multiple writes happen quickly</li>
+            <li>No delivery confirmation—messages lost silently</li>
+            <li>Cross-subsystem (Windows ↔ WSL2) file watching is even worse</li>
+        </ul>
+        
+        <p>Weeks spent debugging phantom missed events. The watcher would work for hours, then silently stop firing. No errors. No warnings. Just... nothing.</p>
+        
+        <div class="solution-box">
+            <h4>The Fix</h4>
+            <p><span class="success">WM_COPYDATA messaging.</span> Direct inter-process communication via Windows messages. Synchronous, reliable, no file system involved. The P15 Agent Bridge now uses <code>SendMessageTimeoutW</code> with proper timeout handling.</p>
+        </div>
+    </section>
+    
+    <section class="section">
+        <h2>SendMessage Desktop Freeze</h2>
+        
+        <div class="failure-box">
+            <h4>The Symptom</h4>
+            <p>Entire Windows desktop freezes for 30+ seconds. Mouse frozen. Keyboard dead. Then suddenly everything resumes.</p>
+        </div>
+        
+        <h3>The Cause</h3>
+        <p>Raw <code>SendMessage()</code> calls to a window that's not responding. SendMessage is synchronous—it blocks until the target processes the message. If the target is hung, the sender hangs. If the sender is the UI thread, the whole desktop hangs.</p>
+        
+        <pre>
+// NEVER DO THIS:
+SendMessage(hwnd, WM_COPYDATA, ...)  // Blocks forever if target is hung
+
+// ALWAYS DO THIS:
+SendMessageTimeoutW(hwnd, WM_COPYDATA, ..., 
+    SMTO_ABORTIFHUNG, 1000, &result)  // Times out after 1 second
+        </pre>
+        
+        <div class="solution-box">
+            <h4>The Fix</h4>
+            <p>Three changes: (1) Use <code>SendMessageTimeoutW</code> instead of <code>SendMessage</code>, (2) Add <code>SMTO_ABORTIFHUNG</code> flag, (3) Execute from a worker thread, not the UI thread.</p>
+            <p>Now documented as <span class="success">PhiSHRI door E59</span>.</p>
+        </div>
+    </section>
+    
+    <section class="section">
+        <h2>KALIC's Goldfish Memory</h2>
+        
+        <div class="failure-box">
+            <h4>The Problem</h4>
+            <p>Every KALIC session started blank. Same questions answered multiple times. Same mistakes repeated. Same solutions rediscovered.</p>
+        </div>
+        
+        <h3>Failed Approaches</h3>
+        <ul>
+            <li><strong>Single memory file</strong> - Grew too large, token expensive to load</li>
+            <li><strong>"Just remember"</strong> - Context windows reset. Discipline doesn't persist.</li>
+            <li><strong>Conversation history</strong> - Too verbose, mostly noise</li>
+        </ul>
+        
+        <p>The core issue: <span class="failure">relying on the agent to check its own memory without enforcement.</span></p>
+        
+        <div class="solution-box">
+            <h4>The Fix</h4>
+            <p>Brain regions architecture: compartmentalized storage (frontal, temporal, parietal, cerebellum, brainstem) with semantic routing and Claude Code hooks that <em>enforce</em> checking before actions.</p>
+            <p>Full case study: <a href="kalic_case_study.html" style="color: #00ff00;">Teaching an AI to Remember</a></p>
+        </div>
+    </section>
+    
+    <section class="section">
+        <h2>.NET MCP Configuration Hell</h2>
+        
+        <div class="failure-box">
+            <h4>The Pattern</h4>
+            <p>Deploy .NET MCP server. Works. Move to new machine. Breaks. Debug for hours. Fix. Move again. Breaks differently.</p>
+        </div>
+        
+        <h3>Specific Issues</h3>
+        <ul>
+            <li><strong>Logging pollution</strong> - .NET logging writes to stdout, corrupts JSON-RPC</li>
+            <li><strong>Runtime mismatches</strong> - .NET 6 vs 7 vs 8, SDK versions</li>
+            <li><strong>NuGet cache</strong> - Old packages cached, wrong versions loaded</li>
+            <li><strong>Path differences</strong> - Different users, different drive letters</li>
+        </ul>
+        
+        <pre>
+// The magic incantation to silence .NET logging:
+Environment.SetEnvironmentVariable("Logging__LogLevel__Default", "None");
+
+// But this only works if set BEFORE any logging initialization...
+        </pre>
+        
+        <div class="solution-box">
+            <h4>The Fix</h4>
+            <p>Rewrite in Rust. No runtime. No configuration. Single binary deployment.</p>
+            <p>Everything MCP: 100MB+ .NET → <span class="success">819KB Rust</span></p>
+        </div>
+    </section>
+    
+    <section class="section">
+        <h2>Battle.net TCP Deadlock</h2>
+        
+        <div class="failure-box">
+            <h4>The Mystery</h4>
+            <p>Battle.net installer stuck at 5% or 45%. No error. No timeout. Just frozen.</p>
+        </div>
+        
+        <h3>The Investigation</h3>
+        <p>Network analysis with SigCon6 revealed TCP connections in <code>FIN_WAIT_1</code> state—the localhost connection between Agent.exe and Setup.exe. Agent sends FIN, Setup never receives it. Connection hangs forever.</p>
+        
+        <p>Cause: Windows Defender's network inspection was interfering with localhost traffic in specific edge cases. Disabling real-time protection allowed the install to complete.</p>
+        
+        <div class="solution-box">
+            <h4>The Lesson</h4>
+            <p>When network operations hang without errors, check TCP states with <code>netstat -ano</code>. Localhost isn't immune to interference. Document weird edge cases because they <em>will</em> happen again.</p>
+        </div>
+    </section>
+    
+    <section class="section">
+        <h2>Defender Flagging Itself</h2>
+        
+        <div class="failure-box">
+            <h4>The Absurdity</h4>
+            <p>Windows Defender repeatedly detecting "VirTool:Win32/DefenderTamperingRestore" threats. Source: Windows Defender's own registry writes.</p>
+        </div>
+        
+        <h3>The Loop</h3>
+        <pre>
+1. Defender blocked from cloud (firewall)
+2. Sets DisableBlockAtFirstSeen=1 (offline fallback)
+3. Downloads new signatures (different endpoint)
+4. New signatures flag DisableBlockAtFirstSeen=1 as malware
+5. Defender detects its own registry write
+6. Resets to 0, tries cloud, blocked, sets to 1...
+7. Infinite loop
+        </pre>
+        
+        <p>Microsoft shipped a signature to protect Defender from Defender's own offline-mode behavior.</p>
+        
+        <div class="solution-box">
+            <h4>The Fix</h4>
+            <p>Either allow Defender cloud access, or use ConfigureDefender (AndyFul) to manage settings without triggering the tamper detection.</p>
+        </div>
+    </section>
+    
+    <section class="section">
+        <h2>Electron ControlSend Failures</h2>
+        
+        <div class="failure-box">
+            <h4>The Issue</h4>
+            <p>AutoHotkey's <code>ControlSend</code> doesn't work reliably with Electron apps. Keystrokes lost or duplicated.</p>
+        </div>
+        
+        <p>Electron's Chromium renderer handles input differently than native Windows controls. The window hierarchy is unusual, focus management is async, and input events get swallowed.</p>
+        
+        <div class="solution-box">
+            <h4>The Workaround</h4>
+            <p>Use clipboard + Ctrl+V instead of direct keystroke sending. Or use WM_COPYDATA for the actual data transfer and only use keystrokes for focus management.</p>
+            <p>Documented as <span class="success">PhiSHRI door E58</span>.</p>
+        </div>
+    </section>
+    
+    <section class="section">
+        <h2>Lessons Learned</h2>
+        
+        <h3>1. Reliability Over Features</h3>
+        <p>A tool that works 99% of the time is worse than one that works 100% of the time. That 1% failure rate means you can never fully trust it.</p>
+        
+        <h3>2. Enforcement Over Discipline</h3>
+        <p>Don't rely on remembering to check. Build systems that force the check. Hooks, pre-commit scripts, automated gates.</p>
+        
+        <h3>3. Document the Weird Stuff</h3>
+        <p>Edge cases that took hours to debug will happen again. Write them down. Create PhiSHRI doors. Future you will thank past you.</p>
+        
+        <h3>4. Rewrite When Fixing Isn't Enough</h3>
+        <p>Some architectures are fundamentally broken. No amount of patching fixes bad foundations. Sometimes starting over is faster than continuing to debug.</p>
+        
+        <h3>5. Test the Failure Modes</h3>
+        <p>Happy paths are easy. What happens when the network is down? When the target process is hung? When the disk is full? Test those.</p>
+        
+        <div style="margin-top: 30px;">
+            <span class="tag">Post-Mortem</span>
+            <span class="tag">Debugging</span>
+            <span class="tag">Lessons Learned</span>
+        </div>
+    </section>
+    
+    <footer class="footer">
+        <p>CARBYNE.EXE // PHIVECTOR PROJECT</p>
+        <p style="margin-top: 10px;">Learn from the crashes.</p>
+    </footer>
+</body>
+</html>
