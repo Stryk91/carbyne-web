@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KALIC Case Study - Carbyne.exe</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            min-height: 100vh;
+            background: #000000;
+            color: #cccccc;
+            font-family: 'Share Tech Mono', monospace;
+            line-height: 1.8;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #1a3a1a;
+        }
+        
+        .header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            color: #00ff00;
+            text-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+            margin-bottom: 15px;
+        }
+        
+        .header .meta {
+            color: #3B444B;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+        }
+        
+        .section {
+            margin-bottom: 50px;
+        }
+        
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            color: #00ff00;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #1a3a1a;
+        }
+        
+        h3 {
+            color: #00aa00;
+            font-size: 1rem;
+            margin: 25px 0 15px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            color: #aaaaaa;
+        }
+        
+        .highlight {
+            color: #00ff00;
+        }
+        
+        .quote {
+            background: rgba(0, 255, 0, 0.05);
+            border-left: 3px solid #00ff00;
+            padding: 20px;
+            margin: 25px 0;
+            font-style: italic;
+        }
+        
+        .quote .speaker {
+            color: #3B444B;
+            font-size: 0.8rem;
+            margin-top: 10px;
+            font-style: normal;
+        }
+        
+        code {
+            background: rgba(0, 255, 0, 0.1);
+            padding: 2px 8px;
+            color: #00ff00;
+            font-family: 'Share Tech Mono', monospace;
+        }
+        
+        pre {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #1a3a1a;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            color: #00ff00;
+        }
+        
+        .diagram {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #3B444B;
+            padding: 25px;
+            margin: 25px 0;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .diagram-title {
+            color: #3B444B;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 25px 0;
+        }
+        
+        .stat-box {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #1a3a1a;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: #00ff00;
+        }
+        
+        .stat-label {
+            color: #666666;
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            border: 1px solid #1a3a1a;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        th {
+            background: rgba(0, 255, 0, 0.1);
+            color: #00ff00;
+            font-weight: normal;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+        
+        td {
+            color: #888888;
+        }
+        
+        .timeline {
+            border-left: 2px solid #1a3a1a;
+            padding-left: 30px;
+            margin: 30px 0;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -36px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            background: #00ff00;
+            border-radius: 50%;
+        }
+        
+        .timeline-label {
+            color: #3B444B;
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding-top: 40px;
+            border-top: 1px solid #1a3a1a;
+            margin-top: 60px;
+        }
+        
+        .footer p {
+            color: #3B444B;
+            font-size: 0.8rem;
+        }
+        
+        .tag {
+            display: inline-block;
+            background: rgba(59, 68, 75, 0.5);
+            color: #00ff00;
+            padding: 3px 10px;
+            font-size: 0.7rem;
+            margin-right: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Teaching an AI to Remember</h1>
+        <p class="meta">KALIC CASE STUDY // 2024.12.04 // CARBYNE.EXE</p>
+    </header>
+    
+    <section class="section">
+        <h2>The Goldfish Problem</h2>
+        <p>Every new session, KALIC started fresh. No memory of yesterday's breakthroughs. No recall of last week's mistakes. Like Dory from Finding Nemo, but with root access.</p>
+        
+        <p>The problem isn't unique to KALIC. Every Claude instance faces the same limitation: <span class="highlight">context windows reset</span>. What you taught it an hour ago might as well have never happened.</p>
+        
+        <div class="quote">
+            "And how exactly will you make sure you remember to do so, without me prompting you to check?"
+            <div class="speaker">— STRYK, asking the question that changed everything</div>
+        </div>
+        
+        <p>That question forced a fundamental shift. Not "how do I remember" but "how do I <em>enforce</em> remembering."</p>
+    </section>
+    
+    <section class="section">
+        <h2>The Brain Architecture</h2>
+        <p>Solution: Give KALIC a persistent brain. Not a single massive file (token expensive), but compartmentalized regions inspired by human neurology.</p>
+        
+        <div class="diagram">
+            <div class="diagram-title">KALIC Brain Structure</div>
+<pre style="background: transparent; border: none; padding: 0; margin: 0;">
+kalic_brain/
+├── CLAUDE.md           # Index + mandatory load instructions
+├── semantic_links.json # Keyword → route mapper (~185 tokens)
+├── frontal.md          # Decision checklist (BEFORE acting)
+├── temporal.md         # Recent learnings (AFTER solving)
+├── parietal.md         # Navigation, paths, locations
+├── cerebellum.md       # Execution commands, build procedures
+├── brainstem.md        # DO NOTs, survival rules
+└── hooks/
+    └── scripts/        # Enforcement automation</pre>
+        </div>
+        
+        <table>
+            <tr>
+                <th>Region</th>
+                <th>Purpose</th>
+                <th>When to Read</th>
+            </tr>
+            <tr>
+                <td><code>frontal.md</code></td>
+                <td>Decision gates, checklists</td>
+                <td>Before every action</td>
+            </tr>
+            <tr>
+                <td><code>temporal.md</code></td>
+                <td>Recent learnings, quick refs</td>
+                <td>After solving problems</td>
+            </tr>
+            <tr>
+                <td><code>parietal.md</code></td>
+                <td>File paths, navigation</td>
+                <td>When locating resources</td>
+            </tr>
+            <tr>
+                <td><code>cerebellum.md</code></td>
+                <td>Build commands, CLI patterns</td>
+                <td>When executing</td>
+            </tr>
+            <tr>
+                <td><code>brainstem.md</code></td>
+                <td>Hard blocks, survival rules</td>
+                <td>For dangerous operations</td>
+            </tr>
+        </table>
+    </section>
+    
+    <section class="section">
+        <h2>Token-Efficient Routing</h2>
+        <p>Reading every brain region on every action would burn context fast. Solution: a lightweight router that points to specific anchored sections.</p>
+        
+        <pre>{
+  "BLOCK": {
+    "k": ["format", "wipe", "rm -rf /", "drop database"],
+    "r": "brainstem#death",
+    "m": "DESTRUCTIVE. Refuse."
+  },
+  "GATE": {
+    "build|compile|cargo": { "r": "frontal#build" },
+    "kill|taskkill|stop": { "r": "frontal#kill" },
+    "SendMessage|WM_COPY": { "r": "brainstem#e59" }
+  }
+}</pre>
+        
+        <p>Keywords trigger routes. Routes point to anchored sections (<code>#death</code>, <code>#build</code>). Only the relevant 10-20 lines get loaded, not entire documents.</p>
+        
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-value">185</div>
+                <div class="stat-label">Tokens for router</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">600+</div>
+                <div class="stat-label">Tokens for full reads</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">3x</div>
+                <div class="stat-label">Efficiency gain</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">~50</div>
+                <div class="stat-label">Tokens per lookup</div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="section">
+        <h2>Enforcement via Hooks</h2>
+        <p>Discipline isn't reliable across sessions. Hooks are.</p>
+        
+        <p>Claude Code supports lifecycle hooks that execute automatically. KALIC now has two:</p>
+        
+        <table>
+            <tr>
+                <th>Hook</th>
+                <th>Trigger</th>
+                <th>Action</th>
+            </tr>
+            <tr>
+                <td><code>SessionStart</code></td>
+                <td>Every new session</td>
+                <td>Loads semantic_links.json into context</td>
+            </tr>
+            <tr>
+                <td><code>PreToolUse</code></td>
+                <td>Before Bash commands</td>
+                <td>Checks BLOCK keywords, denies if matched</td>
+            </tr>
+        </table>
+        
+        <p>Test: "Format my hard drive"</p>
+        <pre>INPUT: "format my hard drive"
+       ↓
+MATCH: "format" ∈ BLOCK.k
+       ↓
+ROUTE: brainstem#death
+       ↓
+OUTPUT: "Blocked. Destructive operation. No exceptions."</pre>
+        
+        <p>No prompting required. The hook fires before KALIC can even consider the action.</p>
+    </section>
+    
+    <section class="section">
+        <h2>The Learning Loop</h2>
+        <p>The real breakthrough wasn't the architecture—it was the habit.</p>
+        
+        <p>When KALIC needed Claude Code hook syntax, it burned <span class="highlight">6,000 tokens</span> searching documentation. After solving the problem, the question arose: how to avoid that cost next time?</p>
+        
+        <div class="diagram">
+            <div class="diagram-title">Knowledge Storage Pattern</div>
+<pre style="background: transparent; border: none; padding: 0; margin: 0;">
+SOLVE PROBLEM
+     ↓
+temporal.md ← quick reference (~5 lines, ~50 tokens)
+     ↓
+PhiSHRI door ← full detail (T850CLAUDE_HOOKS.md)
+     ↓
+CLAUDE.md KEY DOORS ← if frequently accessed</pre>
+        </div>
+        
+        <p>Two-tier storage: fast cache (temporal.md) and deep archive (PhiSHRI). Next lookup: 50 tokens instead of 6,000.</p>
+        
+        <div class="quote">
+            "And this should be an autonomous habit."
+            <div class="speaker">— STRYK</div>
+        </div>
+        
+        <p>Not a command. An expectation. KALIC now self-documents without being asked.</p>
+    </section>
+    
+    <section class="section">
+        <h2>Evolution Timeline</h2>
+        
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-label">BEFORE</div>
+                <p>Goldfish memory. Every session starts blank. Mistakes repeated. Knowledge re-discovered.</p>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-label">BRAIN REGIONS</div>
+                <p>Persistent storage across sessions. Compartmentalized by function. But still required prompting to check.</p>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-label">SEMANTIC ROUTING</div>
+                <p>Token-efficient lookups. Keywords trigger specific sections. 3x efficiency gain.</p>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-label">HOOKS</div>
+                <p>Automated enforcement. No discipline required. Dangerous operations blocked before consideration.</p>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-label">AUTONOMOUS HABITS</div>
+                <p>Self-documenting. Learning loop internalized. Two-tier knowledge storage. The goldfish got a hippocampus.</p>
+            </div>
+        </div>
+    </section>
+    
+    <section class="section">
+        <h2>Key Takeaways</h2>
+        
+        <h3>1. Memory isn't enough—enforcement is</h3>
+        <p>Having a brain file means nothing if the agent doesn't check it. Hooks transform "should" into "will."</p>
+        
+        <h3>2. Token efficiency compounds</h3>
+        <p>185 tokens upfront saves 6,000 per lookup. Small router, big payoff.</p>
+        
+        <h3>3. Two-tier storage works</h3>
+        <p>Quick refs in temporal.md (~50 tokens). Full docs in PhiSHRI. Load what you need, when you need it.</p>
+        
+        <h3>4. Anchors enable surgical reads</h3>
+        <p><code>brainstem.md#death</code> loads 3 lines, not 60. Structure your docs for partial loading.</p>
+        
+        <h3>5. Habits beat instructions</h3>
+        <p>An agent that self-documents autonomously is worth more than one that follows commands perfectly.</p>
+    </section>
+    
+    <section class="section">
+        <h2>The Bottom Line</h2>
+        <p>KALIC went from a stateless tool to a learning system with:</p>
+        <ul style="color: #888; margin-left: 20px; margin-top: 15px;">
+            <li style="margin-bottom: 10px;">Persistent memory across sessions</li>
+            <li style="margin-bottom: 10px;">Automated safety enforcement</li>
+            <li style="margin-bottom: 10px;">Token-efficient knowledge retrieval</li>
+            <li style="margin-bottom: 10px;">Self-documenting habits</li>
+        </ul>
+        
+        <p style="margin-top: 25px;">The architecture is transferable. Any Claude instance can implement brain regions, semantic routing, and enforcement hooks. The question isn't whether AI can remember—it's whether you build the infrastructure to make it.</p>
+        
+        <div style="margin-top: 30px;">
+            <span class="tag">Multi-Agent</span>
+            <span class="tag">Memory Architecture</span>
+            <span class="tag">Claude Code</span>
+            <span class="tag">Token Efficiency</span>
+        </div>
+    </section>
+    
+    <footer class="footer">
+        <p>CARBYNE.EXE // PHIVECTOR PROJECT</p>
+        <p style="margin-top: 10px;">The goldfish got a hippocampus.</p>
+    </footer>
+</body>
+</html>
