@@ -35,6 +35,34 @@
         .stat-box { background: rgba(0, 0, 0, 0.5); border: 1px solid #1a3a1a; padding: 15px; text-align: center; }
         .stat-value { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; color: #00ff00; }
         .stat-label { color: #666; font-size: 0.75rem; margin-top: 5px; }
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            body { padding: 10px; font-size: 14px; }
+            .container { padding: 15px; margin: 10px 0; }
+            h1 { font-size: 1.8em; }
+            h2 { font-size: 1.4em; }
+            h3 { font-size: 1.2em; }
+            .nav { flex-direction: column; gap: 10px; text-align: center; }
+            .nav a { display: block; padding: 10px; }
+            .stats-grid { grid-template-columns: 1fr; gap: 10px; }
+            .stats-box { padding: 15px; }
+            .stat-row { flex-direction: column; gap: 5px; }
+            .stat-value { text-align: left; }
+            table { display: block; overflow-x: auto; white-space: nowrap; }
+            pre, code { font-size: 12px; overflow-x: auto; }
+            .code-block { padding: 10px; }
+            .entry { padding: 15px; }
+            .tag { font-size: 0.7em; padding: 3px 8px; }
+            .section { padding: 15px; }
+        }
+        
+        @media (max-width: 480px) {
+            body { padding: 5px; }
+            h1 { font-size: 1.5em; }
+            .container { padding: 10px; }
+            .stat-box { padding: 10px; }
+            .stat-value { font-size: 1.5em; }
+        }
     </style>
 </head>
 <body>
@@ -398,6 +426,7 @@ Prerequisites: None
     </footer>
 </body>
 </html>
+
 
 
 
