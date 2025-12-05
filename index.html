@@ -327,6 +327,41 @@
                 <p class="version">v0.1.0 // Local-First AI Infrastructure</p>
             </header>
             
+            <article class="entry" id="dec-05">
+                <p class="entry-date">2024.12.05</p>
+                <h2>Tool Hallway: Deferred Tool Loading</h2>
+                <p>Extended PhiSHRI's door-based architecture into a new wing: the Tool Hallway. Same Matrix concept—Neo in the white void, rows of doors—but these doors contain MCP tool schemas instead of documentation. KALIC extracted 128 tool definitions from 9 running servers, DC bulk-generated 112 tool doors with triggers, examples, and gotchas.</p>
+                
+                <p>The result: instead of loading all 165 tools into context (50K+ tokens), Claude searches Tool Hallway by intent and loads only what's needed. Natural language in, relevant tool schemas out.</p>
+                
+                <div class="stats-box">
+                    <h4>Tool Hallway</h4>
+                    <div class="stat-row">
+                        <span class="stat-label">Tool Doors</span>
+                        <span class="stat-value">112</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">MCP Servers</span>
+                        <span class="stat-value">9</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Context Reduction</span>
+                        <span class="stat-value">95%</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">TRIGGERS.json</span>
+                        <span class="stat-value">5.3KB</span>
+                    </div>
+                </div>
+                
+                <p><strong>Validation:</strong> Anthropic published a blog post on November 24 describing their new <code>defer_loading</code> flag and Tool Search Tool beta—the exact architecture we built months prior. Their internal teams hit the same context overflow wall and arrived at the same solution.</p>
+                
+                <span class="tag">PhiSHRI</span>
+                <span class="tag">MCP</span>
+                <span class="tag">Context Optimization</span>
+                <span class="tag">Rust</span>
+            </article>
+            
             <article class="entry" id="dec-04">
                 <p class="entry-date">2024.12.04</p>
                 <h2>Carbyne Compositor Tool</h2>
