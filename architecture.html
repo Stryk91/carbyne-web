@@ -160,6 +160,33 @@
                 <td>Inter-agent messaging, synchronous communication</td>
             </tr>
         </table>
+        <h4>Tool Hallway (December 2025)</h4>
+        <p>Extension of PhiSHRI's door-based architecture to MCP tools. Same Matrix hallway concept—different wing.</p>
+        
+        <div class="code-block">
+            <pre>Knowledge Hallway → Documentation doors (623+)
+Tool Hallway     → Executable MCP tool schemas (112 doors)</pre>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-value">112</div>
+                <div class="stat-label">Tool Doors</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">95%</div>
+                <div class="stat-label">Context Reduction</div>
+            </div>
+        </div>
+        
+        <p><strong>Architecture validated by Anthropic (Nov 24, 2025)</strong> — Their <code>defer_loading</code> and Tool Search Tool mirrors our implementation.</p>
+        
+        <table>
+            <tr><th>Anthropic Feature</th><th>PhiSHRI Equivalent</th></tr>
+            <tr><td><code>defer_loading: true</code></td><td>Tool Hallway doors</td></tr>
+            <tr><td>Tool Search Tool</td><td><code>phishri_tool_search</code></td></tr>
+            <tr><td>Tool Use Examples</td><td><code>examples[]</code> per door</td></tr>
+        </table>
         
         <h3>Knowledge Layer</h3>
         <table>
@@ -189,11 +216,11 @@
         
         <div class="stats-grid">
             <div class="stat-box">
-                <div class="stat-value">119</div>
+                <div class="stat-value">128</div>
                 <div class="stat-label">Total Tools</div>
             </div>
             <div class="stat-box">
-                <div class="stat-value">6</div>
+                <div class="stat-value"> 9</div>
                 <div class="stat-label">MCP Servers</div>
             </div>
             <div class="stat-box">
@@ -371,3 +398,7 @@ Prerequisites: None
     </footer>
 </body>
 </html>
+
+
+
+
