@@ -313,7 +313,7 @@
             
             <div class="nav-section">
                 <h3>December 2024</h3>
-                <a href="textgrep.html" class="nav-link">21 - TextGrep MCP</a>
+                <a href="#dec-21" class="nav-link">21 - TextGrep MCP</a>
                 <a href="#dec-20" class="nav-link">20 - DC-KALIC Parity</a>
                 <a href="#dec-04" class="nav-link active">04 - Carbyne Compositor</a>
                 <a href="#dec-03" class="nav-link">03 - KALIC Brain Regions</a>
@@ -357,6 +357,43 @@
                 <p class="tagline">PhiVector Development Chronicle</p>
                 <p class="version">v0.1.0 // Local-First AI Infrastructure</p>
             </header>
+            
+            <article class="entry" id="dec-21">
+                <p class="entry-date">2024.12.21</p>
+                <h2>TextGrep MCP: The Deadly Duo</h2>
+                <p>Built native Rust grep MCP server to complement Everything. Together they form a surgical search architecture: Everything finds WHERE files are, TextGrep extracts WHAT's inside—both in under 100ms.</p>
+                
+                <div class="stats-box">
+                    <h4>Performance vs PowerShell</h4>
+                    <div class="stat-row">
+                        <span class="stat-label">Select-String</span>
+                        <span class="stat-value">~25,500ms</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">TextGrep</span>
+                        <span class="stat-value">&lt;100ms</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Speedup</span>
+                        <span class="stat-value">250-500x</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Context Token Savings</span>
+                        <span class="stat-value">60-95%</span>
+                    </div>
+                </div>
+                
+                <p><strong>The Architecture:</strong> Instead of loading entire files into context hoping the answer is inside, agents now locate files with Everything's indexed search, then extract only the relevant lines with TextGrep. Surgical precision instead of haystack dumps.</p>
+                
+                <p>14 tools: <code>grep</code> <code>grep_context</code> <code>grep_files</code> <code>grep_count</code> <code>extract_matches</code> <code>extract_lines</code> <code>filter_lines</code> <code>file_stats</code> <code>compare_files</code> <code>find_duplicates</code> <code>replace</code></p>
+                
+                <p><a href="textgrep.html" style="color: #00ff00;">Full article →</a></p>
+                
+                <span class="tag">Rust</span>
+                <span class="tag">MCP</span>
+                <span class="tag">Context Optimization</span>
+                <span class="tag">Search</span>
+            </article>
             
             <article class="entry" id="dec-20">
                 <p class="entry-date">2024.12.20</p>
