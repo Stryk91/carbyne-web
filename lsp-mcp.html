@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LSP-MCP Bridge - Carbyne.exe</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { min-height: 100vh; background: #000; color: #ccc; font-family: 'Share Tech Mono', monospace; line-height: 1.8; padding: 40px; max-width: 900px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 60px; padding-bottom: 30px; border-bottom: 1px solid #1a3a1a; }
+        .header h1 { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; color: #00ff00; text-shadow: 0 0 30px rgba(0, 255, 0, 0.5); margin-bottom: 15px; }
+        .header .meta { color: #3B444B; font-size: 0.85rem; letter-spacing: 2px; }
+        .section { margin-bottom: 50px; }
+        h2 { font-family: 'Orbitron', sans-serif; font-size: 1.3rem; color: #00ff00; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #1a3a1a; }
+        h3 { color: #00aa00; font-size: 1rem; margin: 25px 0 15px; }
+        p { margin-bottom: 15px; color: #aaa; }
+        .highlight { color: #00ff00; }
+        .quote { background: rgba(0, 255, 0, 0.05); border-left: 3px solid #00ff00; padding: 20px; margin: 25px 0; font-style: italic; }
+        .quote .speaker { color: #3B444B; font-size: 0.8rem; margin-top: 10px; font-style: normal; }
+        code { background: rgba(0, 255, 0, 0.1); padding: 2px 8px; color: #00ff00; }
+        pre { background: rgba(0, 0, 0, 0.5); border: 1px solid #1a3a1a; padding: 20px; margin: 20px 0; overflow-x: auto; font-size: 0.85rem; color: #00ff00; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #1a3a1a; padding: 12px; text-align: left; }
+        th { background: rgba(0, 255, 0, 0.1); color: #00ff00; font-weight: normal; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
+        td { color: #888; }
+        ul { color: #888; margin-left: 25px; margin-bottom: 20px; }
+        li { margin-bottom: 10px; }
+        .tag { display: inline-block; background: rgba(59, 68, 75, 0.5); color: #00ff00; padding: 3px 10px; font-size: 0.7rem; margin-right: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        .footer { text-align: center; padding-top: 40px; border-top: 1px solid #1a3a1a; margin-top: 60px; }
+        .footer p { color: #3B444B; font-size: 0.8rem; }
+        .back-link { display: inline-block; color: #00ff00; text-decoration: none; margin-bottom: 30px; padding: 8px 15px; border: 1px solid #1a3a1a; }
+        .back-link:hover { background: rgba(0, 255, 0, 0.1); }
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin: 25px 0; }
+        .stat-box { background: rgba(0, 0, 0, 0.5); border: 1px solid #1a3a1a; padding: 20px; text-align: center; }
+        .stat-value { font-family: 'Orbitron', sans-serif; font-size: 2rem; color: #00ff00; }
+        .stat-label { color: #666; font-size: 0.8rem; margin-top: 5px; }
+        .big-number { font-family: 'Orbitron', sans-serif; font-size: 3.5rem; color: #00ff00; text-align: center; margin: 30px 0; text-shadow: 0 0 30px rgba(0, 255, 0, 0.5); }
+        .big-label { text-align: center; color: #3B444B; font-size: 0.9rem; letter-spacing: 2px; }
+        .lang-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 25px 0; }
+        .lang-box { background: rgba(0, 0, 0, 0.5); border: 1px solid #1a3a1a; padding: 15px; text-align: center; }
+        .lang-box h4 { color: #00ff00; margin-bottom: 5px; font-size: 0.9rem; }
+        .lang-box p { color: #666; font-size: 0.75rem; margin: 0; }
+        @media (max-width: 768px) {
+            body { padding: 10px; font-size: 14px; }
+            h1 { font-size: 1.8em; }
+            h2 { font-size: 1.4em; }
+            .stats-grid { grid-template-columns: 1fr; gap: 10px; }
+            .lang-grid { grid-template-columns: repeat(2, 1fr); }
+            table { display: block; overflow-x: auto; white-space: nowrap; }
+            pre, code { font-size: 12px; overflow-x: auto; }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">← Back to Chronicle</a>
+
+    <header class="header">
+        <h1>LSP-MCP-RS</h1>
+        <p class="meta">ONE BINARY. EVERY LANGUAGE. // JANUARY 2026</p>
+    </header>
+
+    <section class="section">
+        <h2>The Headline</h2>
+
+        <div class="big-number">∞ Languages</div>
+        <div class="big-label">One MCP Server to Rule Them All</div>
+
+        <p style="text-align: center; margin-top: 30px;">Go to definition. Find references. Hover docs. Across Rust, Lua, TypeScript, Python, C/C++, Go—all from one binary.</p>
+    </section>
+
+    <section class="section">
+        <h2>The Problem</h2>
+
+        <p>AI agents working with code have a critical blindspot: <span class="highlight">they can't navigate like an IDE</span>. They read files sequentially, grep for patterns, hope they find the right definition. Meanwhile, every modern editor has LSP—the Language Server Protocol—providing instant semantic understanding.</p>
+
+        <table>
+            <tr>
+                <th>Scenario</th>
+                <th>Without LSP</th>
+                <th>With LSP</th>
+            </tr>
+            <tr>
+                <td>"What does this function do?"</td>
+                <td>Read entire file, guess from context</td>
+                <td class="highlight">Hover → instant docs + signature</td>
+            </tr>
+            <tr>
+                <td>"Where is this defined?"</td>
+                <td>grep filename, hope it's unique</td>
+                <td class="highlight">goToDefinition → exact location</td>
+            </tr>
+            <tr>
+                <td>"What calls this function?"</td>
+                <td>grep pattern, manual filtering</td>
+                <td class="highlight">findReferences → complete list</td>
+            </tr>
+            <tr>
+                <td>"Show me the class structure"</td>
+                <td>Read whole file, parse mentally</td>
+                <td class="highlight">documentSymbol → full outline</td>
+            </tr>
+        </table>
+
+        <div class="quote">
+            "Every IDE user has had this for a decade. AI agents were still grepping like it's 1995."
+            <div class="speaker">- STRYK</div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>The Solution</h2>
+
+        <p><span class="highlight">lsp-mcp-rs</span> bridges Language Server Protocol to Model Context Protocol. One Rust binary that spawns and manages any LSP server, exposing its capabilities as MCP tools.</p>
+
+        <pre>
+┌─────────────────────────────────────────────────────────────┐
+│                    AI AGENT (DC/KALIC)                      │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  MCP Request: lsp_goto_definition                           │
+│  file: "src/main.rs", line: 42, character: 15               │
+│                                                             │
+├─────────────────────────────────────────────────────────────┤
+│                      LSP-MCP-RS                             │
+│                                                             │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐         │
+│  │rust-analyzer│  │lua-language │  │ typescript- │  ...    │
+│  │             │  │   server    │  │   server    │         │
+│  └─────────────┘  └─────────────┘  └─────────────┘         │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+        </pre>
+    </section>
+
+    <section class="section">
+        <h2>Supported Languages</h2>
+
+        <div class="lang-grid">
+            <div class="lang-box">
+                <h4>Rust</h4>
+                <p>rust-analyzer</p>
+            </div>
+            <div class="lang-box">
+                <h4>Lua</h4>
+                <p>lua-language-server</p>
+            </div>
+            <div class="lang-box">
+                <h4>TypeScript</h4>
+                <p>typescript-language-server</p>
+            </div>
+            <div class="lang-box">
+                <h4>Python</h4>
+                <p>pyright</p>
+            </div>
+            <div class="lang-box">
+                <h4>Go</h4>
+                <p>gopls</p>
+            </div>
+            <div class="lang-box">
+                <h4>C/C++</h4>
+                <p>clangd</p>
+            </div>
+        </div>
+
+        <p>Configuration-driven. Add any LSP that speaks JSON-RPC over stdio. The binary doesn't care what language—it just bridges the protocol.</p>
+    </section>
+
+    <section class="section">
+        <h2>Capabilities</h2>
+
+        <table>
+            <tr>
+                <th>Operation</th>
+                <th>MCP Tool</th>
+                <th>What It Returns</th>
+            </tr>
+            <tr>
+                <td>Go to Definition</td>
+                <td><code>lsp_goto_definition</code></td>
+                <td>File path, line, column of definition</td>
+            </tr>
+            <tr>
+                <td>Find References</td>
+                <td><code>lsp_find_references</code></td>
+                <td>All locations where symbol is used</td>
+            </tr>
+            <tr>
+                <td>Hover Information</td>
+                <td><code>lsp_hover</code></td>
+                <td>Documentation, type signature</td>
+            </tr>
+            <tr>
+                <td>Document Symbols</td>
+                <td><code>lsp_document_symbol</code></td>
+                <td>Functions, classes, variables in file</td>
+            </tr>
+            <tr>
+                <td>Workspace Symbols</td>
+                <td><code>lsp_workspace_symbol</code></td>
+                <td>Search symbols across project</td>
+            </tr>
+            <tr>
+                <td>Go to Implementation</td>
+                <td><code>lsp_goto_implementation</code></td>
+                <td>Interface/trait implementations</td>
+            </tr>
+            <tr>
+                <td>Call Hierarchy (In)</td>
+                <td><code>lsp_incoming_calls</code></td>
+                <td>What calls this function</td>
+            </tr>
+            <tr>
+                <td>Call Hierarchy (Out)</td>
+                <td><code>lsp_outgoing_calls</code></td>
+                <td>What this function calls</td>
+            </tr>
+        </table>
+    </section>
+
+    <section class="section">
+        <h2>Real World Example</h2>
+
+        <h3>Task: Understand a Rust codebase</h3>
+
+        <pre>
+# Old way: grep and hope
+grep -r "fn process_message" src/
+→ Found in 3 files, unclear which is the real one
+→ Load all 3 files (~2000 tokens) to check
+
+# New way: LSP precision
+lsp_workspace_symbol query="process_message"
+→ src/handler.rs:142 - fn process_message(msg: Message) -> Result<()>
+
+lsp_goto_definition file="src/main.rs" line=87 character=12
+→ src/handler.rs:142
+
+lsp_find_references file="src/handler.rs" line=142 character=4
+→ Called from: main.rs:87, worker.rs:203, tests.rs:45
+
+lsp_hover file="src/handler.rs" line=142 character=4
+→ "Processes incoming WebSocket messages and routes to handlers"
+→ fn process_message(msg: Message) -> Result<Response, Error>
+        </pre>
+
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-value">~2000</div>
+                <div class="stat-label">Tokens (grep approach)</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">~100</div>
+                <div class="stat-label">Tokens (LSP approach)</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>Configuration</h2>
+
+        <pre>
+# config.toml
+[servers.rust]
+command = "rust-analyzer"
+extensions = [".rs"]
+
+[servers.lua]
+command = "lua-language-server"
+extensions = [".lua"]
+
+[servers.typescript]
+command = "typescript-language-server"
+args = ["--stdio"]
+extensions = [".ts", ".tsx", ".js", ".jsx"]
+
+[servers.python]
+command = "pyright-langserver"
+args = ["--stdio"]
+extensions = [".py"]
+
+[servers.go]
+command = "gopls"
+extensions = [".go"]
+
+[servers.cpp]
+command = "clangd"
+extensions = [".c", ".cpp", ".h", ".hpp"]
+        </pre>
+
+        <p>File extension determines which LSP handles the request. Add servers for any language with LSP support—the bridge handles the rest.</p>
+    </section>
+
+    <section class="section">
+        <h2>Implementation</h2>
+
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-value">Rust</div>
+                <div class="stat-label">Language</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">MCP</div>
+                <div class="stat-label">Protocol</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">9</div>
+                <div class="stat-label">LSP Operations</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">6+</div>
+                <div class="stat-label">Languages</div>
+            </div>
+        </div>
+
+        <p>Built with <code>tower-lsp</code> for LSP client communication, <code>tokio</code> for async, and the MCP SDK for Claude integration. Servers are spawned on-demand and cached for subsequent requests.</p>
+    </section>
+
+    <section class="section">
+        <h2>Why This Matters</h2>
+
+        <div class="quote">
+            "This isn't just a tool—it's giving AI agents the same code understanding that made IDEs revolutionary. Definition jumping, reference finding, semantic search. The entire IDE experience, exposed as MCP tools."
+            <div class="speaker">- STRYK</div>
+        </div>
+
+        <ul>
+            <li><span class="highlight">Precision over guessing</span> — Exact definitions instead of grep patterns</li>
+            <li><span class="highlight">Context efficiency</span> — Get just what's needed, not entire files</li>
+            <li><span class="highlight">Language agnostic</span> — Same interface for Rust, Lua, TypeScript, anything</li>
+            <li><span class="highlight">Real semantic understanding</span> — Types, docs, call hierarchies</li>
+            <li><span class="highlight">Production-ready</span> — Uses battle-tested LSP servers</li>
+        </ul>
+    </section>
+
+    <section class="section">
+        <h2>Status</h2>
+
+        <table>
+            <tr>
+                <th>Milestone</th>
+                <th>Status</th>
+            </tr>
+            <tr>
+                <td>Core LSP bridge</td>
+                <td class="highlight">✓ Complete</td>
+            </tr>
+            <tr>
+                <td>Multi-language config</td>
+                <td class="highlight">✓ Complete</td>
+            </tr>
+            <tr>
+                <td>GitHub release</td>
+                <td class="highlight">✓ Published</td>
+            </tr>
+            <tr>
+                <td>MCP Registry submission</td>
+                <td>In Progress</td>
+            </tr>
+            <tr>
+                <td>Claude Code integration</td>
+                <td class="highlight">✓ Working</td>
+            </tr>
+        </table>
+
+        <p style="margin-top: 20px;">Repository: <a href="https://github.com/Stryk91/lsp-mcp-rs" style="color: #00ff00;">github.com/Stryk91/lsp-mcp-rs</a></p>
+    </section>
+
+    <footer class="footer">
+        <p>LSP-MCP-RS // CARBYNE ECOSYSTEM // 2026</p>
+        <p style="margin-top: 10px;">
+            <span class="tag">rust</span>
+            <span class="tag">mcp</span>
+            <span class="tag">lsp</span>
+            <span class="tag">ide</span>
+            <span class="tag">code-intelligence</span>
+        </p>
+    </footer>
+</body>
+</html>
