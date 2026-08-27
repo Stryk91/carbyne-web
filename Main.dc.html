@@ -1,0 +1,371 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap">
+  <style>
+    body { margin: 0; font-family: 'Share Tech Mono', monospace; background: #000; color: #ccc; }
+    * { box-sizing: border-box; }
+    a { color: #00ff00; } a:hover { color: #00aa00; }
+
+    @keyframes scanline {
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(100vh); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      92% { opacity: 1; }
+      93% { opacity: 0.8; }
+      94% { opacity: 1; }
+    }
+  </style>
+</helmet>
+
+<div style="min-height: 100%; background: #000; position: relative; overflow: hidden;">
+
+  <!-- Animated Grid Background -->
+  <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image:
+    linear-gradient(rgba(0, 255, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 0, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px; pointer-events: none; z-index: 0;"></div>
+
+  <!-- CRT Scanline Effect -->
+  <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.1) 2px,
+    rgba(0, 0, 0, 0.1) 4px
+  ); pointer-events: none; z-index: 1000; opacity: 0.3;"></div>
+
+  <!-- Content -->
+  <div style="position: relative; z-index: 1; padding: 60px 80px;">
+
+    <!-- Header / Hero -->
+    <div style="text-align: center; margin-bottom: 80px; padding: 60px 0;">
+      <div style="font-family: 'Orbitron', sans-serif; font-size: 72px; font-weight: 700; color: #00ff00;
+        text-shadow: 0 0 20px rgba(0, 255, 0, 0.5), 0 0 40px rgba(0, 255, 0, 0.3), 0 0 60px rgba(0, 255, 0, 0.2);
+        letter-spacing: 8px; animation: flicker 4s infinite; margin-bottom: 20px;">
+        CARBYNE.EXE
+      </div>
+      <div style="color: #3B444B; font-size: 14px; letter-spacing: 6px; text-transform: uppercase;">
+        Design System // v2.0
+      </div>
+      <div style="width: 200px; height: 1px; background: linear-gradient(90deg, transparent, #00ff00, transparent); margin: 30px auto;"></div>
+    </div>
+
+    <!-- Color Palette Section -->
+    <div style="margin-bottom: 60px;">
+      <div style="font-family: 'Orbitron', sans-serif; font-size: 18px; color: #00ff00; margin-bottom: 30px;
+        padding-bottom: 10px; border-bottom: 1px solid #1a3a1a; display: flex; align-items: center; gap: 12px;">
+        <span style="color: #3B444B;">01</span> COLOR PALETTE
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 20px;">
+        <!-- Primary Background -->
+        <div style="text-align: center;">
+          <div style="width: 100%; aspect-ratio: 1; background: #000000; border: 1px solid #1a3a1a; margin-bottom: 12px;"></div>
+          <div style="color: #00ff00; font-size: 12px;">Primary BG</div>
+          <div style="color: #555; font-size: 11px;">#000000</div>
+        </div>
+        <!-- Matrix Green -->
+        <div style="text-align: center;">
+          <div style="width: 100%; aspect-ratio: 1; background: #00ff00; border: 1px solid #1a3a1a; margin-bottom: 12px;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.4);"></div>
+          <div style="color: #00ff00; font-size: 12px;">Matrix Green</div>
+          <div style="color: #555; font-size: 11px;">#00ff00</div>
+        </div>
+        <!-- Secondary Green -->
+        <div style="text-align: center;">
+          <div style="width: 100%; aspect-ratio: 1; background: #00aa00; border: 1px solid #1a3a1a; margin-bottom: 12px;"></div>
+          <div style="color: #00ff00; font-size: 12px;">Secondary</div>
+          <div style="color: #555; font-size: 11px;">#00aa00</div>
+        </div>
+        <!-- Border -->
+        <div style="text-align: center;">
+          <div style="width: 100%; aspect-ratio: 1; background: #1a3a1a; border: 1px solid #1a3a1a; margin-bottom: 12px;"></div>
+          <div style="color: #00ff00; font-size: 12px;">Border</div>
+          <div style="color: #555; font-size: 11px;">#1a3a1a</div>
+        </div>
+        <!-- Text -->
+        <div style="text-align: center;">
+          <div style="width: 100%; aspect-ratio: 1; background: #cccccc; border: 1px solid #1a3a1a; margin-bottom: 12px;"></div>
+          <div style="color: #00ff00; font-size: 12px;">Text</div>
+          <div style="color: #555; font-size: 11px;">#cccccc</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Typography Section -->
+    <div style="margin-bottom: 60px;">
+      <div style="font-family: 'Orbitron', sans-serif; font-size: 18px; color: #00ff00; margin-bottom: 30px;
+        padding-bottom: 10px; border-bottom: 1px solid #1a3a1a; display: flex; align-items: center; gap: 12px;">
+        <span style="color: #3B444B;">02</span> TYPOGRAPHY
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px;">
+        <div style="background: rgba(0, 255, 0, 0.02); border: 1px solid #1a3a1a; padding: 30px;">
+          <div style="color: #3B444B; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px;">Headers</div>
+          <div style="font-family: 'Orbitron', sans-serif; font-size: 36px; color: #00ff00; margin-bottom: 10px;">Orbitron</div>
+          <div style="font-family: 'Orbitron', sans-serif; font-size: 24px; color: #00aa00; margin-bottom: 10px;">Bold & Regular</div>
+          <div style="font-family: 'Orbitron', sans-serif; font-size: 14px; color: #888;">ABCDEFGHIJKLMNOPQRSTUVWXYZ</div>
+        </div>
+        <div style="background: rgba(0, 255, 0, 0.02); border: 1px solid #1a3a1a; padding: 30px;">
+          <div style="color: #3B444B; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px;">Body Text</div>
+          <div style="font-family: 'Share Tech Mono', monospace; font-size: 24px; color: #00ff00; margin-bottom: 10px;">Share Tech Mono</div>
+          <div style="font-family: 'Share Tech Mono', monospace; font-size: 16px; color: #ccc; margin-bottom: 10px; line-height: 1.6;">
+            Terminal-style monospace for that authentic hacker aesthetic.
+          </div>
+          <div style="font-family: 'Share Tech Mono', monospace; font-size: 14px; color: #888;">0123456789 !@#$%^&*()</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Components Row 1 -->
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; margin-bottom: 60px;">
+
+      <!-- Buttons -->
+      <div>
+        <div style="font-family: 'Orbitron', sans-serif; font-size: 18px; color: #00ff00; margin-bottom: 30px;
+          padding-bottom: 10px; border-bottom: 1px solid #1a3a1a; display: flex; align-items: center; gap: 12px;">
+          <span style="color: #3B444B;">03</span> BUTTONS
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+          <!-- Primary -->
+          <div style="display: flex; align-items: center; gap: 20px;">
+            <div style="background: #00ff00; color: #000; padding: 12px 24px; font-family: 'Orbitron', sans-serif;
+              font-size: 12px; letter-spacing: 2px; cursor: pointer; text-transform: uppercase;
+              box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);">
+              INITIALIZE
+            </div>
+            <span style="color: #555; font-size: 12px;">Primary</span>
+          </div>
+          <!-- Secondary -->
+          <div style="display: flex; align-items: center; gap: 20px;">
+            <div style="background: transparent; color: #00ff00; padding: 12px 24px; font-family: 'Orbitron', sans-serif;
+              font-size: 12px; letter-spacing: 2px; cursor: pointer; border: 1px solid #00ff00; text-transform: uppercase;">
+              CONFIGURE
+            </div>
+            <span style="color: #555; font-size: 12px;">Secondary</span>
+          </div>
+          <!-- Ghost -->
+          <div style="display: flex; align-items: center; gap: 20px;">
+            <div style="background: transparent; color: #888; padding: 12px 24px; font-family: 'Orbitron', sans-serif;
+              font-size: 12px; letter-spacing: 2px; cursor: pointer; border: 1px solid #1a3a1a; text-transform: uppercase;">
+              CANCEL
+            </div>
+            <span style="color: #555; font-size: 12px;">Ghost</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tags / Badges -->
+      <div>
+        <div style="font-family: 'Orbitron', sans-serif; font-size: 18px; color: #00ff00; margin-bottom: 30px;
+          padding-bottom: 10px; border-bottom: 1px solid #1a3a1a; display: flex; align-items: center; gap: 12px;">
+          <span style="color: #3B444B;">04</span> TAGS & BADGES
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
+          <span style="background: rgba(0, 255, 0, 0.1); color: #00ff00; padding: 6px 14px; font-size: 11px;
+            text-transform: uppercase; letter-spacing: 1px; border: 1px solid #1a3a1a;">LOCAL-FIRST</span>
+          <span style="background: rgba(0, 255, 0, 0.1); color: #00ff00; padding: 6px 14px; font-size: 11px;
+            text-transform: uppercase; letter-spacing: 1px; border: 1px solid #1a3a1a;">MULTI-AGENT</span>
+          <span style="background: rgba(0, 255, 0, 0.1); color: #00ff00; padding: 6px 14px; font-size: 11px;
+            text-transform: uppercase; letter-spacing: 1px; border: 1px solid #1a3a1a;">PORTABLE</span>
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+          <span style="background: #00ff00; color: #000; padding: 4px 10px; font-size: 10px;
+            text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">ACTIVE</span>
+          <span style="background: #1a3a1a; color: #00aa00; padding: 4px 10px; font-size: 10px;
+            text-transform: uppercase; letter-spacing: 1px;">STANDBY</span>
+          <span style="background: transparent; color: #555; padding: 4px 10px; font-size: 10px;
+            text-transform: uppercase; letter-spacing: 1px; border: 1px solid #333;">OFFLINE</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div style="margin-bottom: 60px;">
+      <div style="font-family: 'Orbitron', sans-serif; font-size: 18px; color: #00ff00; margin-bottom: 30px;
+        padding-bottom: 10px; border-bottom: 1px solid #1a3a1a; display: flex; align-items: center; gap: 12px;">
+        <span style="color: #3B444B;">05</span> STATS & METRICS
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px;">
+        <div style="background: rgba(0, 0, 0, 0.5); border: 1px solid #1a3a1a; padding: 24px; text-align: center;
+          transition: all 0.3s ease;">
+          <div style="color: #3B444B; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px;">Tools Active</div>
+          <div style="font-family: 'Orbitron', sans-serif; font-size: 36px; color: #00ff00;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);">128</div>
+        </div>
+        <div style="background: rgba(0, 0, 0, 0.5); border: 1px solid #1a3a1a; padding: 24px; text-align: center;">
+          <div style="color: #3B444B; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px;">MCP Servers</div>
+          <div style="font-family: 'Orbitron', sans-serif; font-size: 36px; color: #00ff00;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);">9</div>
+        </div>
+        <div style="background: rgba(0, 0, 0, 0.5); border: 1px solid #1a3a1a; padding: 24px; text-align: center;">
+          <div style="color: #3B444B; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px;">Uptime</div>
+          <div style="font-family: 'Orbitron', sans-serif; font-size: 36px; color: #00ff00;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);">99.7%</div>
+        </div>
+        <div style="background: rgba(0, 0, 0, 0.5); border: 1px solid #1a3a1a; padding: 24px; text-align: center;">
+          <div style="color: #3B444B; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px;">Agents</div>
+          <div style="font-family: 'Orbitron', sans-serif; font-size: 36px; color: #00ff00;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);">2</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quote Block & Code -->
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; margin-bottom: 60px;">
+
+      <!-- Quote Block -->
+      <div>
+        <div style="font-family: 'Orbitron', sans-serif; font-size: 18px; color: #00ff00; margin-bottom: 30px;
+          padding-bottom: 10px; border-bottom: 1px solid #1a3a1a; display: flex; align-items: center; gap: 12px;">
+          <span style="color: #3B444B;">06</span> CALLOUT / QUOTE
+        </div>
+
+        <div style="background: rgba(0, 255, 0, 0.03); border-left: 3px solid #00ff00; padding: 24px;
+          margin-bottom: 20px;">
+          <div style="color: #ccc; font-style: italic; line-height: 1.7; margin-bottom: 12px;">
+            "The contest is still the same. You must win the race to win the battle."
+          </div>
+          <div style="color: #3B444B; font-size: 12px;">— Operating Philosophy</div>
+        </div>
+
+        <div style="background: rgba(0, 0, 0, 0.5); border: 1px solid #1a3a1a; border-left: 3px solid #00aa00; padding: 20px;">
+          <div style="color: #00ff00; font-size: 12px; margin-bottom: 8px;">⚡ SYSTEM NOTICE</div>
+          <div style="color: #888; font-size: 13px; line-height: 1.6;">
+            Local-first isn't ideology. It's insurance.
+          </div>
+        </div>
+      </div>
+
+      <!-- Code Block -->
+      <div>
+        <div style="font-family: 'Orbitron', sans-serif; font-size: 18px; color: #00ff00; margin-bottom: 30px;
+          padding-bottom: 10px; border-bottom: 1px solid #1a3a1a; display: flex; align-items: center; gap: 12px;">
+          <span style="color: #3B444B;">07</span> CODE BLOCK
+        </div>
+
+        <div style="background: rgba(0, 0, 0, 0.8); border: 1px solid #1a3a1a; padding: 20px; font-size: 13px;
+          line-height: 1.6; overflow-x: auto;">
+          <div style="color: #3B444B; margin-bottom: 12px;">// phivector.init()</div>
+          <div><span style="color: #00aa00;">const</span> <span style="color: #ccc;">carbyne</span> = {</div>
+          <div style="padding-left: 20px;"><span style="color: #888;">runtime:</span> <span style="color: #00ff00;">'portable'</span>,</div>
+          <div style="padding-left: 20px;"><span style="color: #888;">agents:</span> [<span style="color: #00ff00;">'DC'</span>, <span style="color: #00ff00;">'KALIC'</span>],</div>
+          <div style="padding-left: 20px;"><span style="color: #888;">status:</span> <span style="color: #00ff00;">'OPERATIONAL'</span></div>
+          <div style="color: #ccc;">};</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <div style="margin-bottom: 60px;">
+      <div style="font-family: 'Orbitron', sans-serif; font-size: 18px; color: #00ff00; margin-bottom: 30px;
+        padding-bottom: 10px; border-bottom: 1px solid #1a3a1a; display: flex; align-items: center; gap: 12px;">
+        <span style="color: #3B444B;">08</span> NAVIGATION
+      </div>
+
+      <div style="background: rgba(0, 0, 0, 0.5); border: 1px solid #1a3a1a; padding: 0;">
+        <div style="display: flex; gap: 0; border-bottom: 1px solid #1a3a1a;">
+          <div style="padding: 16px 24px; color: #00ff00; border-bottom: 2px solid #00ff00; margin-bottom: -1px;
+            font-family: 'Orbitron', sans-serif; font-size: 12px; letter-spacing: 1px;">CHRONICLE</div>
+          <div style="padding: 16px 24px; color: #888; font-family: 'Orbitron', sans-serif; font-size: 12px; letter-spacing: 1px;">ABOUT</div>
+          <div style="padding: 16px 24px; color: #888; font-family: 'Orbitron', sans-serif; font-size: 12px; letter-spacing: 1px;">ARCHITECTURE</div>
+          <div style="padding: 16px 24px; color: #888; font-family: 'Orbitron', sans-serif; font-size: 12px; letter-spacing: 1px;">ROADMAP</div>
+        </div>
+        <div style="padding: 20px; color: #555; font-size: 12px;">
+          ← Back Link Style: <span style="color: #00ff00; border: 1px solid #1a3a1a; padding: 4px 12px; margin-left: 10px;">← Back to Chronicle</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cards with Hover -->
+    <div style="margin-bottom: 60px;">
+      <div style="font-family: 'Orbitron', sans-serif; font-size: 18px; color: #00ff00; margin-bottom: 30px;
+        padding-bottom: 10px; border-bottom: 1px solid #1a3a1a; display: flex; align-items: center; gap: 12px;">
+        <span style="color: #3B444B;">09</span> CONTENT CARDS
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px;">
+        <!-- Card Normal -->
+        <div style="background: rgba(0, 0, 0, 0.5); border: 1px solid #1a3a1a; padding: 24px;">
+          <div style="color: #3B444B; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px;">
+            Dec 05, 2024
+          </div>
+          <div style="font-family: 'Orbitron', sans-serif; font-size: 16px; color: #00ff00; margin-bottom: 12px;">
+            Tool Hallway
+          </div>
+          <div style="color: #888; font-size: 13px; line-height: 1.6;">
+            Deferred loading system for MCP servers...
+          </div>
+        </div>
+
+        <!-- Card Hover State -->
+        <div style="background: rgba(0, 255, 0, 0.05); border: 1px solid #00ff00; padding: 24px;
+          box-shadow: 0 0 20px rgba(0, 255, 0, 0.1);">
+          <div style="color: #3B444B; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px;">
+            Dec 04, 2024
+          </div>
+          <div style="font-family: 'Orbitron', sans-serif; font-size: 16px; color: #00ff00; margin-bottom: 12px;">
+            Hover State →
+          </div>
+          <div style="color: #aaa; font-size: 13px; line-height: 1.6;">
+            Green border glow on hover interaction.
+          </div>
+        </div>
+
+        <!-- Card with Status -->
+        <div style="background: rgba(0, 0, 0, 0.5); border: 1px solid #1a3a1a; padding: 24px; position: relative;">
+          <div style="position: absolute; top: 12px; right: 12px; width: 8px; height: 8px; background: #00ff00;
+            border-radius: 50%; animation: pulse 2s infinite;"></div>
+          <div style="color: #3B444B; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px;">
+            Status Card
+          </div>
+          <div style="font-family: 'Orbitron', sans-serif; font-size: 16px; color: #00ff00; margin-bottom: 12px;">
+            With Indicator
+          </div>
+          <div style="color: #888; font-size: 13px; line-height: 1.6;">
+            Pulsing green dot for active status.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="text-align: center; padding: 40px 0; border-top: 1px solid #1a3a1a; margin-top: 40px;">
+      <div style="color: #3B444B; font-size: 12px; letter-spacing: 4px; margin-bottom: 10px;">
+        CARBYNE.EXE // PHIVECTOR PROJECT
+      </div>
+      <div style="color: #555; font-size: 11px;">
+        Plug in. Double-click. Full runtime.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":1200,"height":2400}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>
